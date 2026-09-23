@@ -4,6 +4,13 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="theme-color" content="#F6D7C7" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="PupScene Studio" />
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png" />
 <title>PupScene Studio</title>
 <style>
 :root{
@@ -33,7 +40,8 @@ button{cursor:pointer}
 .splash-orb{position:absolute;width:62vw;height:62vw;max-width:760px;max-height:760px;border-radius:50%;background:var(--peach);filter:blur(2px);left:50%;top:46%;transform:translate(-50%,-50%)}
 .splash-inner{position:relative;z-index:2;text-align:center;color:var(--black);width:min(92vw,900px);padding:30px}
 .splash-logo{display:inline-flex;align-items:center;gap:12px;background:#fff;color:var(--black);padding:10px 16px;border-radius:999px;font-weight:900;letter-spacing:-.03em;box-shadow:0 14px 35px rgba(0,0,0,.18)}
-.logo-mark{width:34px;height:34px;display:grid;place-items:center;background:var(--black);border-radius:11px;color:var(--peach);font-size:20px;transform:rotate(-7deg)}
+.logo-mark{width:38px;height:38px;display:grid;place-items:center;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 8px 18px rgba(0,0,0,.12);border:1px solid rgba(17,17,17,.06)}
+.logo-mark img{width:100%;height:100%;object-fit:cover;display:block}
 .splash-title{font-size:clamp(48px,9vw,100px);line-height:.88;letter-spacing:-.075em;margin:28px auto 12px;color:var(--black);max-width:8ch;text-shadow:0 2px 0 rgba(255,255,255,.2)}
 .splash-sub{color:var(--black);font-size:15px;font-weight:800;margin:0 auto 16px;background:rgba(255,255,255,.72);border:1px solid rgba(17,17,17,.12);padding:8px 12px;border-radius:999px;width:max-content;max-width:92%;backdrop-filter:blur(6px)}
 .splash-pup-wrap{width:min(44vw,350px);margin:0 auto -12px;position:relative;will-change:transform;transition:transform .16s ease-out;cursor:pointer;user-select:none}
@@ -49,9 +57,9 @@ header{position:sticky;top:0;z-index:30;background:rgba(251,250,249,.92);backdro
 .wrap{max-width:1200px;margin:auto;padding:14px 22px}
 .nav{display:flex;align-items:center;justify-content:space-between;gap:16px}
 .brand-logo{display:flex;align-items:center;gap:10px;font-size:21px;font-weight:950;letter-spacing:-.045em}
-.brand-logo .logo-mark{width:38px;height:38px;font-size:21px}
+.brand-logo .logo-mark{width:42px;height:42px}
 .brand-logo em{font-style:normal;color:#b5684b}
-.nav-chip{border:1px solid var(--black);border-radius:999px;padding:7px 11px;font-size:11px;font-weight:900;background:#fff}
+.nav-chip{border:1px solid var(--black);border-radius:999px;padding:7px 11px;font-size:11px;font-weight:900;background:#fff}.nav-actions{display:flex;align-items:center;gap:10px}.install-btn{display:none;border:1px solid var(--black);background:var(--peach);color:var(--black);border-radius:999px;padding:8px 12px;font-size:11px;font-weight:900;box-shadow:0 8px 20px rgba(17,17,17,.08)}.install-btn.show{display:inline-flex;align-items:center;gap:6px}
 main{max-width:1200px;margin:auto;padding:28px 22px 80px}
 
 .hero{position:relative;overflow:hidden;background:var(--white);border:1px solid var(--line);border-radius:32px;min-height:480px;padding:54px 50px;display:grid;grid-template-columns:1.04fr .96fr;align-items:center;box-shadow:var(--shadow)}
@@ -81,7 +89,7 @@ input,textarea,select{width:100%;border:1px solid var(--line);border-radius:14px
 .scene{border:1px solid var(--line);border-radius:20px;padding:18px;background:#fff;margin-top:14px;box-shadow:0 8px 28px rgba(17,17,17,.035)}.scenehead{display:flex;align-items:center;justify-content:space-between;gap:10px}.scene h3{margin:0;font-size:20px}.pill{font-size:10px;text-transform:uppercase;letter-spacing:.06em;font-weight:900;padding:6px 9px;border-radius:999px;background:var(--peach-2);border:1px solid #f0cfbe}.scenegrid{display:grid;grid-template-columns:.72fr 1.28fr;gap:14px;margin-top:13px}.meta{font-size:13px;color:var(--muted);line-height:1.6}.meta b{color:var(--black)}.refchips{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}.chip{font-size:10px;padding:5px 7px;border-radius:999px;background:#f5f3f2;border:1px solid var(--line)}.provider-rule{margin-top:9px;padding:10px;border-radius:12px;background:#f7f5f4;color:#4d4845;font-size:11px;line-height:1.5}.scene textarea{width:100%;min-height:400px;border:1px solid var(--line);border-radius:14px;padding:13px;background:#fdfcfc;font:12px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;color:#262321}.empty{text-align:center;color:var(--muted);padding:34px 10px}
 footer{text-align:center;color:var(--muted);font-size:11px;padding:30px}
 
-@media(max-width:900px){.hero{grid-template-columns:1fr;min-height:590px;padding:40px 28px}.hero-copy{padding-bottom:230px}.hero-pup{width:430px;max-width:78%;right:-55px}.grid,.scenegrid,.provider-layout{grid-template-columns:1fr}.refs{grid-template-columns:1fr}.provider-meta{grid-template-columns:1fr}.wrap,main{padding-left:14px;padding-right:14px}.section-title{align-items:flex-start;flex-direction:column}.story-tools{grid-template-columns:1fr}.nav-chip{display:none}}
+@media(max-width:900px){.hero{grid-template-columns:1fr;min-height:590px;padding:40px 28px}.hero-copy{padding-bottom:230px}.hero-pup{width:430px;max-width:78%;right:-55px}.grid,.scenegrid,.provider-layout{grid-template-columns:1fr}.refs{grid-template-columns:1fr}.provider-meta{grid-template-columns:1fr}.wrap,main{padding-left:14px;padding-right:14px}.section-title{align-items:flex-start;flex-direction:column}.story-tools{grid-template-columns:1fr}.nav-chip{display:none}.nav-actions{margin-left:auto}}
 @media(max-width:520px){.hero{padding:32px 20px}.hero h1{font-size:46px;line-height:.94}.hero p{font-size:16px;color:#3f3a37}.hero-copy{padding-bottom:190px}.hero-pup{width:320px;right:-48px;bottom:-18px}.hero-pup-hint{right:12px;bottom:12px}.card{padding:17px}.scene textarea{min-height:440px}.splash-inner{width:100%;padding:22px 16px}.splash-orb{width:118vw;height:118vw;top:47%}.splash-title{font-size:48px;line-height:.92;max-width:9ch;margin-top:20px}.splash-sub{font-size:13px;line-height:1.35;max-width:88%;white-space:normal}.splash-pup-wrap{width:min(62vw,280px)}.splash-logo{font-size:13px}.splash-hint{font-size:9px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 </style>
@@ -90,7 +98,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:30px}
 <div id="splash" aria-label="PupScene Studio intro">
   <div class="splash-orb"></div>
   <div class="splash-inner">
-    <div class="splash-logo"><span class="logo-mark">🐾</span>PupScene Studio</div>
+    <div class="splash-logo"><span class="logo-mark"><img src="assets/app-logo.png" alt="PupScene Studio logo"></span>PupScene Studio</div>
     <div id="splashPup" class="splash-pup-wrap" title="Boop the puppy"><img src="assets/pupscene-puppy.png" alt="PupScene puppy mascot"></div>
     <h1 class="splash-title">Ideas in. Scenes out.</h1>
     <p class="splash-sub">Your continuity-first AI video planning studio.</p>
@@ -101,8 +109,8 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:30px}
 
 <header>
   <div class="wrap nav">
-    <div class="brand-logo"><span class="logo-mark">🐾</span>PupScene <em>Studio</em></div>
-    <div class="nav-chip">Product ad storyboard studio</div>
+    <div class="brand-logo"><span class="logo-mark"><img src="assets/app-logo.png" alt="PupScene Studio logo"></span>PupScene <em>Studio</em></div>
+    <div class="nav-actions"><div class="nav-chip">Product ad storyboard studio</div><button class="install-btn" id="installBtn" title="Install PupScene Studio">Install app</button></div>
   </div>
 </header>
 <main>
@@ -315,6 +323,16 @@ if(heroPup){
   const endDrag=e=>{if(!dragging)return;dragging=false;heroPup.classList.remove('dragging');if(!moved)bark()};
   heroPup.addEventListener('pointerup',endDrag);heroPup.addEventListener('pointercancel',endDrag);
 }
+
+
+// PWA install support for mobile and desktop
+let deferredInstallPrompt=null;
+const installBtn=$('installBtn');
+function setInstallReady(ready){if(!installBtn)return;installBtn.classList.toggle('show',!!ready);installBtn.disabled=!ready}
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstallPrompt=e;setInstallReady(true)});
+if(installBtn){installBtn.addEventListener('click',async()=>{if(!deferredInstallPrompt){showStatus('Install prompt not available yet. On mobile, use Add to Home Screen. On desktop, your browser menu may still show Install PupScene Studio.');return;}deferredInstallPrompt.prompt();try{await deferredInstallPrompt.userChoice;}catch(e){}deferredInstallPrompt=null;setInstallReady(false);});}
+window.addEventListener('appinstalled',()=>{deferredInstallPrompt=null;setInstallReady(false);showStatus('PupScene Studio installed successfully.');});
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('./service-worker.js').catch(()=>{});});}
 
 </script>
 </body>
