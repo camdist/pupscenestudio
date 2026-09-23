@@ -92,14 +92,18 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:30px}
 @media(max-width:900px){.hero{grid-template-columns:1fr;min-height:590px;padding:40px 28px}.hero-copy{padding-bottom:230px}.hero-pup{width:430px;max-width:78%;right:-55px}.grid,.scenegrid,.provider-layout{grid-template-columns:1fr}.refs{grid-template-columns:1fr}.provider-meta{grid-template-columns:1fr}.wrap,main{padding-left:14px;padding-right:14px}.section-title{align-items:flex-start;flex-direction:column}.story-tools{grid-template-columns:1fr}.nav-chip{display:none}.nav-actions{margin-left:auto}}
 @media(max-width:520px){.hero{padding:32px 20px}.hero h1{font-size:46px;line-height:.94}.hero p{font-size:16px;color:#3f3a37}.hero-copy{padding-bottom:190px}.hero-pup{width:320px;right:-48px;bottom:-18px}.hero-pup-hint{right:12px;bottom:12px}.card{padding:17px}.scene textarea{min-height:440px}.splash-inner{width:100%;padding:22px 16px}.splash-orb{width:118vw;height:118vw;top:47%}.splash-title{font-size:48px;line-height:.92;max-width:9ch;margin-top:20px}.splash-sub{font-size:13px;line-height:1.35;max-width:88%;white-space:normal}.splash-pup-wrap{width:min(62vw,280px)}.splash-logo{font-size:13px}.splash-hint{font-size:9px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+.skip-intro{position:absolute;z-index:4;top:18px;right:18px;border:1px solid rgba(17,17,17,.25);background:#fff;color:var(--black);border-radius:999px;padding:8px 12px;font-size:11px;font-weight:900;box-shadow:0 8px 22px rgba(0,0,0,.12)}
+.ref-preview{margin-top:10px;width:100%;aspect-ratio:4/3;border-radius:12px;object-fit:cover;display:none;border:1px solid var(--line);background:#f5f3f2}.ref-preview.show{display:block}.access-line{margin-top:10px;font-size:11px;font-weight:900;color:var(--peach);position:relative;z-index:2}.install-help{display:none;margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--peach-2);border:1px solid #f0cfbe;color:#5c4338;font-size:12px}.install-help.show{display:block}.hero-pup-reset{position:absolute;z-index:5;right:26px;bottom:62px;border:1px solid rgba(17,17,17,.12);background:rgba(255,255,255,.92);color:var(--black);border-radius:999px;padding:7px 10px;font-size:10px;font-weight:900;box-shadow:0 6px 20px rgba(17,17,17,.08)}.dirty-note{margin-top:6px;font-size:10px;color:#8a5a46}.provider-warning{margin-top:10px;padding:10px 12px;border-radius:12px;background:#fff4ee;border:1px solid #efc8b6;color:#6c4739;font-size:12px;display:none}.provider-warning.show{display:block}
 </style>
 </head>
 <body class="intro-active">
 <div id="splash" aria-label="PupScene Studio intro">
+  <button class="skip-intro" id="skipIntro" type="button">Skip intro</button>
   <div class="splash-orb"></div>
   <div class="splash-inner">
-    <div class="splash-logo"><span class="logo-mark"><img src="assets/app-logo.png" alt="PupScene Studio logo"></span>PupScene Studio</div>
-    <div id="splashPup" class="splash-pup-wrap" title="Boop the puppy"><img src="assets/pupscene-puppy.png" alt="PupScene puppy mascot"></div>
+    <div class="splash-logo"><span class="logo-mark"><img src="assets/app-logo.webp" alt="PupScene Studio logo"></span>PupScene Studio</div>
+    <div id="splashPup" class="splash-pup-wrap" title="Boop the puppy"><img src="assets/pupscene-puppy.webp" alt="PupScene puppy mascot"></div>
     <h1 class="splash-title">Ideas in. Scenes out.</h1>
     <p class="splash-sub">Your continuity-first AI video planning studio.</p>
     <div class="splash-progress"><span></span></div>
@@ -109,10 +113,11 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:30px}
 
 <header>
   <div class="wrap nav">
-    <div class="brand-logo"><span class="logo-mark"><img src="assets/app-logo.png" alt="PupScene Studio logo"></span>PupScene <em>Studio</em></div>
+    <div class="brand-logo"><span class="logo-mark"><img src="assets/app-logo.webp" alt="PupScene Studio logo"></span>PupScene <em>Studio</em></div>
     <div class="nav-actions"><div class="nav-chip">Product ad storyboard studio</div><button class="install-btn" id="installBtn" title="Install PupScene Studio">Install app</button></div>
   </div>
 </header>
+<div class="wrap"><div id="installHelp" class="install-help"></div></div>
 <main>
 <section class="hero">
   <div class="hero-copy">
@@ -121,24 +126,24 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:30px}
     <p>Build conversion-focused storylines, realistic master prompts, continuity references and provider-aware scene prompts for the AI video tool you choose.</p>
     <div class="hero-tags"><span>Ad story frameworks</span><span>Master realism prompt</span><span>10 sec max</span><span>Provider aware</span></div>
   </div>
-  <div class="hero-pup" id="heroPup" aria-label="Draggable PupScene puppy mascot"><img src="assets/pupscene-puppy.png" alt="PupScene puppy mascot"></div><div class="hero-pup-hint">Drag the pup</div>
+  <div class="hero-pup" id="heroPup" role="button" tabindex="0" aria-label="Draggable PupScene puppy mascot. Tap for bark."><img src="assets/pupscene-puppy.webp" alt="PupScene puppy mascot"></div><button class="hero-pup-reset" id="resetPup" type="button">Reset pup</button><div class="hero-pup-hint">Drag the pup</div>
 </section>
 
 <section class="section card">
   <div class="section-title"><h2>1. Build your project</h2><span class="small">Start with the buyer, product and story</span></div>
   <div class="grid">
-    <div class="field"><label>Product name</label><input id="product" placeholder="e.g. Wireless Earbuds"></div>
-    <div class="field"><label>Product link</label><input id="link" placeholder="https://..."></div>
-    <div class="field"><label>Maximum scene length</label><select id="duration"><option value="10">10 seconds</option><option value="8">8 seconds</option><option value="6">6 seconds</option><option value="5">5 seconds</option></select></div>
-    <div class="field"><label>Format</label><select id="format"><option>9:16 vertical</option><option>16:9 landscape</option><option>1:1 square</option></select></div>
-    <div class="field"><label>Target buyer / pain point</label><input id="audience" placeholder="e.g. Busy professionals taking calls in noisy places"></div>
-    <div class="field"><label>Main benefit / CTA</label><input id="benefit" placeholder="e.g. Clear calls anywhere · Shop now"></div>
-    <div class="field full"><label>Product / visual details</label><textarea id="details" placeholder="Product color, materials, packaging, character details, location, lighting, key feature..."></textarea></div>
+    <div class="field"><label for="product">Product name</label><input id="product" placeholder="e.g. Wireless Earbuds"></div>
+    <div class="field"><label for="link">Product link (reference only)</label><input id="link" placeholder="https://..."></div>
+    <div class="field"><label for="duration">Maximum scene length</label><select id="duration"><option value="10">10 seconds</option><option value="8">8 seconds</option><option value="6">6 seconds</option><option value="5">5 seconds</option></select></div>
+    <div class="field"><label for="format">Format</label><select id="format"><option>9:16 vertical</option><option>16:9 landscape</option><option>1:1 square</option></select></div>
+    <div class="field"><label for="audience">Target buyer / pain point</label><input id="audience" placeholder="e.g. Busy professionals taking calls in noisy places"></div>
+    <div class="field"><label for="benefit">Main benefit / CTA</label><input id="benefit" placeholder="e.g. Clear calls anywhere · Shop now"></div>
+    <div class="field full"><label for="details">Product / visual details</label><textarea id="details" placeholder="Product color, materials, packaging, character details, location, lighting, key feature..."></textarea></div>
     <div class="field full">
-      <label>Storyline, script or lyrics</label>
+      <label for="story">Storyline, script or lyrics</label>
       <textarea id="story" placeholder="Write your own story or generate a product-ad storyline below..."></textarea>
       <div class="story-tools">
-        <div class="field"><label>Winning ad structure</label><select id="storyType">
+        <div class="field"><label for="storyType">Winning ad structure</label><select id="storyType">
           <option value="problem">Problem → Solution → Payoff</option>
           <option value="hookdemo">Hook → Demo → Proof → CTA</option>
           <option value="ugc">UGC / Personal Recommendation</option>
@@ -153,7 +158,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:30px}
       <div id="frameworkHint" class="framework-hint">Choose an ad structure, then generate a connected storyline using your product and buyer inputs.</div>
     </div>
     <div class="field full">
-      <label>Master prompt / continuity direction</label>
+      <label for="masterPrompt">Master prompt / continuity direction</label>
       <textarea id="masterPrompt" placeholder="Click Generate Realistic Master Prompt to create this automatically from your inputs..."></textarea>
       <div class="actions"><button class="btn peach" id="generateMaster">Generate Realistic Master Prompt</button></div>
       <div id="masterStatus" class="master-status">Generated after you click the button. You can edit it before creating the storyboard.</div>
@@ -176,7 +181,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:30px}
   <div class="section-title"><h2>3. Choose your AI video tool</h2><span class="small">The entire card updates when you switch providers</span></div>
   <div class="provider-layout">
     <div>
-      <div class="field"><label>Provider / AI Tool</label><select id="provider">
+      <div class="field"><label for="provider">Provider / AI Tool</label><select id="provider">
         <option value="googleflow">Google Flow</option>
         <option value="canva">Canva</option>
         <option value="higgsfield">Higgsfield</option>
@@ -188,12 +193,12 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:30px}
     <div class="provider-card">
       <div class="eyebrow" style="background:rgba(246,215,199,.14);border-color:rgba(246,215,199,.24);color:var(--peach)">Selected provider</div>
       <div id="providerTitle" class="provider-name">Google Flow</div>
-      <div id="providerHelp" class="provider-desc"></div>
+      <div id="providerHelp" class="provider-desc"></div><div id="providerAccess" class="access-line"></div>
       <div class="provider-meta">
         <div class="pc"><h4>Pros</h4><ul id="providerPros"></ul></div>
         <div class="pc"><h4>Cons</h4><ul id="providerCons"></ul></div>
       </div>
-      <div id="providerWorkflow" class="provider-workflow"></div>
+      <div id="providerWorkflow" class="provider-workflow"></div><div id="providerWarning" class="provider-warning"></div>
     </div>
   </div>
 </section>
@@ -205,135 +210,73 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:30px}
 </main>
 <footer>PupScene Studio · Campo Digital Studio</footer>
 
-<script>
-const $=id=>document.getElementById(id);
+<script>const $=id=>document.getElementById(id);
+const STORAGE_KEY='pupscene-project-v9';
+const INTRO_KEY='pupscene-intro-seen-v9';
 let scenes=[];
+let promptEdits={};
+let refPreviewUrls={};
 const providers={
-  googleflow:{
-    name:'Google Flow',
-    url:'https://labs.google/fx/tools/flow',
-    desc:'A filmmaking-oriented Google workspace for building scenes with text prompts and visual ingredients or frames, especially useful when you want a structured cinematic workflow.',
-    pros:['Strong cinematic scene workflow','Supports visual ingredients / reference-led creation','Good fit for shot-by-shot storytelling'],
-    cons:['Availability and generation limits can depend on account/region','You may need to recreate project settings between scenes','Scene continuity still depends on disciplined references and prompting'],
-    workflow:'Open Flow, create or open a project, choose the appropriate video creation mode, paste the PupScene prompt, add your character/location/product references as ingredients or frames when supported, confirm aspect ratio and duration, then generate.'
-  },
-  canva:{
-    name:'Canva',
-    url:'https://www.canva.com/features/ai-video-generator/',
-    desc:'An accessible all-in-one design and video workspace. It is convenient when you want to generate clips and then immediately add text, captions, brand assets and final social edits in the same place.',
-    pros:['Beginner-friendly interface','Generation and editing live in one ecosystem','Easy social-media finishing, text and brand layout'],
-    cons:['Reference-image workflow varies by the Canva AI video feature or app you use','Fine cinematic controls can be lighter than specialist video tools','Some AI capabilities can depend on plan or usage limits'],
-    workflow:'Open Canva AI Video. Use Create a Video Clip for text-to-video, or an image-to-video / Magic Media workflow when you need image references. Paste the PupScene prompt, add the relevant images where supported, generate, then finish captions and layout in Canva.'
-  },
-  higgsfield:{
-    name:'Higgsfield',
-    url:'https://higgsfield.ai/ai-video',
-    desc:'A specialist AI video workspace with multiple models, visual references, first/last-frame control and advanced camera-oriented tools, suited to product ads that need tighter cinematic direction.',
-    pros:['Multiple leading video models in one workspace','Strong camera and motion controls','Reference, first-frame and last-frame workflows support continuity'],
-    cons:['Advanced generation can require credits or a paid plan','More controls can mean a steeper learning curve','Model behavior and reference capabilities vary by model'],
-    workflow:'Open Higgsfield AI Video, select a model that supports your reference needs, paste the PupScene prompt, upload character/location/product reference images, set aspect ratio and scene duration, review motion/camera settings, then generate.'
-  },
-  runway:{
-    name:'Runway',
-    url:'https://app.runwayml.com/',
-    desc:'A cinematic generative-video workspace. Scene Builder is designed to frame a scene first, optionally with references, and then animate it into a finished video with motion direction.',
-    pros:['Scene Builder separates framing from animation','Reference images can guide characters, scene and style','Strong cinematic effects and motion direction'],
-    cons:['Scene Builder uses credits','A two-stage frame-then-animate workflow adds steps','Exact reference capabilities depend on the selected Runway model/tool'],
-    workflow:'Open Runway, go to Apps → Video → Scene Builder, paste the PupScene scene description, add + References, generate the frame, refine it if needed, then add motion direction and generate the video.'
-  }
+  googleflow:{name:'Google Flow',url:'https://labs.google/fx/tools/flow',access:'Free daily Flow credits are available for eligible Google accounts; limits vary by region/account.',desc:'A filmmaking-oriented Google workspace for building scenes with text prompts and visual ingredients or frames.',pros:['Strong cinematic scene workflow','Supports visual ingredients / reference-led creation','Good fit for shot-by-shot storytelling'],cons:['Availability and generation limits can depend on account/region','Project settings may need to be recreated between scenes','Continuity still depends on disciplined references and prompting'],workflow:'Open Flow, create or open a project, choose the appropriate video mode, paste the PupScene prompt, add character/location/product references as ingredients or frames when supported, confirm aspect ratio and duration, then generate.',maxDuration:10,formats:['9:16 vertical','16:9 landscape','1:1 square']},
+  canva:{name:'Canva',url:'https://www.canva.com/features/ai-video-generator/',access:'Native Create a Video Clip access can depend on Canva plan. For that workflow, use up to 8 seconds and 16:9.',desc:'An accessible all-in-one design and video workspace for generating clips and immediately finishing social edits.',pros:['Beginner-friendly interface','Generation and editing in one ecosystem','Easy captions, layout and brand finishing'],cons:['Reference-image workflow varies by Canva feature/app','Fine cinematic controls are lighter than specialist tools','Some AI features depend on plan or usage limits'],workflow:'Open Canva AI Video. For native Create a Video Clip, paste the prompt and use 16:9 at up to 8 seconds. If you need image references, choose a Canva image-to-video or Magic Media workflow that supports them.',maxDuration:8,formats:['16:9 landscape']},
+  higgsfield:{name:'Higgsfield',url:'https://higgsfield.ai/ai-video',access:'Free access exists, but advanced models and higher-volume generation may require credits or a paid plan.',desc:'A specialist AI video workspace with multiple models, references, first/last-frame control and camera tools.',pros:['Multiple leading video models','Strong camera and motion controls','Reference and first/last-frame workflows support continuity'],cons:['Advanced generation can require credits','More controls add a learning curve','Capabilities vary by selected model'],workflow:'Open Higgsfield AI Video, choose a model that supports your references, paste the PupScene prompt, upload references, set aspect ratio and duration, review motion/camera settings, then generate.',maxDuration:10,formats:['9:16 vertical','16:9 landscape','1:1 square']},
+  runway:{name:'Runway',url:'https://app.runwayml.com/',access:'Runway Scene Builder requires credits; available models and generation limits depend on the workspace plan.',desc:'A cinematic generative-video workspace where Scene Builder frames a scene first, optionally with references, then animates it.',pros:['Scene Builder separates framing from animation','Reference images guide characters, scene and style','Strong cinematic motion direction'],cons:['Scene Builder uses credits','Two-stage frame-then-animate adds steps','Reference options depend on selected model/tool'],workflow:'Open Runway, go to Apps > Video > Scene Builder, paste the scene description, add References, generate/refine the frame, then add motion direction and generate the video.',maxDuration:10,formats:['9:16 vertical','16:9 landscape','1:1 square']}
 };
-const storyHints={
-  problem:'Open with a recognizable pain point, make the friction visible, introduce the product naturally, then show a satisfying payoff.',
-  hookdemo:'Start with a scroll-stopping result or claim, demonstrate the key feature quickly, show believable proof, then close with the CTA.',
-  ugc:'Use a relatable first-person discovery: honest frustration, product try, authentic reaction, simple benefit and recommendation.',
-  beforeafter:'Show the frustrating before state, make the product the bridge, then contrast it with a noticeably better after state.',
-  lifestyle:'Put the buyer in an aspirational but believable daily-life moment where the product quietly makes the experience better.',
-  objection:'State the buyer\'s likely hesitation, demonstrate the feature that answers it, then resolve the objection with a confident CTA.',
-  tutorial:'Teach one quick task in a visual sequence where each step proves why the product is useful.',
-  unboxing:'Build curiosity through discovery: reveal packaging, product details, first interaction, feature moment and first-impression payoff.'
-};
-function projectData(){return{product:$('product').value.trim()||'the product',link:$('link').value.trim(),duration:$('duration').value,format:$('format').value,audience:$('audience').value.trim(),benefit:$('benefit').value.trim(),details:$('details').value.trim(),story:$('story').value.trim(),userMaster:$('masterPrompt').value.trim()}}
-function sentenceSplit(text){return text.split(/(?<=[.!?])\s+/).map(s=>s.trim()).filter(Boolean)}
-function selectedRefs(){const r=[];if($('charRef').files[0])r.push('Character: '+$('charRef').files[0].name);if($('locRef').files[0])r.push('Location: '+$('locRef').files[0].name);if($('prodRef').files[0])r.push('Product: '+$('prodRef').files[0].name);return r}
+const storyHints={problem:'Open with a recognizable pain point, make the friction visible, introduce the product naturally, then show a satisfying payoff.',hookdemo:'Start with a scroll-stopping result or claim, demonstrate the key feature quickly, show believable proof, then close with the CTA.',ugc:'Use a relatable first-person discovery: honest frustration, product try, authentic reaction, simple benefit and recommendation.',beforeafter:'Show the frustrating before state, make the product the bridge, then contrast it with a noticeably better after state.',lifestyle:'Put the buyer in an aspirational but believable daily-life moment where the product quietly makes the experience better.',objection:'State the buyer\'s likely hesitation, demonstrate the feature that answers it, then resolve the objection with a confident CTA.',tutorial:'Teach one quick task in a visual sequence where each step proves why the product is useful.',unboxing:'Build curiosity through discovery: reveal packaging, product details, first interaction, feature moment and first-impression payoff.'};
 function esc(s){return String(s).replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))}
+function projectData(){return{product:$('product').value.trim()||'the product',link:$('link').value.trim(),duration:$('duration').value,format:$('format').value,audience:$('audience').value.trim(),benefit:$('benefit').value.trim(),details:$('details').value.trim(),story:$('story').value.trim(),userMaster:$('masterPrompt').value.trim(),storyType:$('storyType').value,provider:$('provider').value}}
+function selectedRefs(){const r=[];if($('charRef').files[0])r.push('Character: '+$('charRef').files[0].name);if($('locRef').files[0])r.push('Location: '+$('locRef').files[0].name);if($('prodRef').files[0])r.push('Product: '+$('prodRef').files[0].name);return r}
 async function cp(t){try{await navigator.clipboard.writeText(t);return true}catch(e){prompt('Copy this text:',t);return false}}
 function showStatus(msg){$('status').textContent=msg;$('status').classList.add('show');setTimeout(()=>$('status').classList.remove('show'),6000)}
-function generateAdStoryline(){const d=projectData(),type=$('storyType').value,buyer=d.audience||'the target buyer',benefit=d.benefit||'the product\'s key benefit';let s='';
-  const M={
-    problem:`Open on ${buyer} experiencing a specific, relatable frustration that ${d.product} is designed to solve. Make the problem visually obvious in a normal real-life setting. Introduce ${d.product} naturally at the moment the problem becomes inconvenient. Show the product being used and make its key feature easy to understand without explanation. End with the buyer experiencing ${benefit}, showing a small believable emotional payoff and a clean product moment with a direct CTA.`,
-    hookdemo:`Start with a visually strong hook that immediately shows the desired outcome from ${d.product}. Cut into a clear product demonstration focused on the most important feature for ${buyer}. Show a believable proof moment where the result can be seen in action. Keep the product central, avoid exaggerated reactions, and finish with ${benefit} plus a concise CTA.`,
-    ugc:`Begin like an authentic personal recommendation from someone who matches ${buyer}. They briefly show the problem they were dealing with, explain what made them try ${d.product}, then use it naturally on camera. Focus on one concrete benefit instead of a long feature list. End with an understated positive reaction, ${benefit}, and a recommendation-style CTA.`,
-    beforeafter:`Show a clear BEFORE moment where ${buyer} deals with the pain point. Introduce ${d.product} as the bridge between the old experience and a better one. Demonstrate the exact action that creates the change. Then show an AFTER moment with visibly improved ease, comfort or result. Finish by reinforcing ${benefit} and the CTA.`,
-    lifestyle:`Follow ${buyer} through one believable lifestyle moment where ${d.product} belongs naturally. Establish the setting and desire, introduce a small friction point, then let the product quietly improve the experience. Keep the acting subtle and aspirational rather than salesy. Finish with a satisfying lifestyle payoff, a short product hero moment and ${benefit}.`,
-    objection:`Open with the most likely hesitation ${buyer} might have about buying or using ${d.product}. Show the product in a real situation that directly answers that concern. Demonstrate the feature or result that resolves the objection. Let the buyer visibly gain confidence, then close with ${benefit} and a conversion-focused CTA.`,
-    tutorial:`Teach ${buyer} how to get a useful result with ${d.product} in three simple visual steps. Step 1 introduces the setup. Step 2 shows the key product action or feature. Step 3 reveals the completed result. Keep each step visually obvious and easy to understand without long text. Finish with ${benefit} and a simple CTA.`,
-    unboxing:`Begin with ${buyer} discovering or receiving ${d.product}. Show the packaging reveal, then a close-up of the product and its most appealing physical detail. Move into the first real use, highlight the key feature through action, and end on a genuine first-impression reaction, ${benefit}, and a clean CTA.`
-  };s=M[type];$('story').value=s;$('frameworkHint').textContent=storyHints[type];if(scenes.length)scenes=[];render();}
-function generateRealisticMasterPrompt(){const d=projectData(),p=providers[$('provider').value],refs=selectedRefs();const refText=refs.length?refs.join(' | '):'No reference files selected yet. Add character, location and product images when available.';const buyer=d.audience||'the intended buyer';const benefit=d.benefit||'the primary product benefit';const details=d.details||'preserve the real product design, materials, proportions and color';
-  const prompt=[`Create a highly realistic, continuity-safe multi-scene product advertisement for ${d.product}.`,`Audience: ${buyer}.`,`Primary benefit and conversion goal: ${benefit}.`,`Product and visual fidelity: ${details}.`,`Output format: ${d.format}. Maximum length per scene: ${d.duration} seconds.`,`Continuity lock: use the same character identity, facial structure, age appearance, hairstyle, skin tone, wardrobe, body proportions, location architecture, furniture placement, time of day, lighting direction, props, product model, product color, material finish and scale in every scene.`,`Use these continuity references in ${p.name}: ${refText}. Treat them as fixed visual anchors, not loose inspiration.`,`Visual realism: photorealistic live-action advertising, physically plausible lighting and shadows, natural skin texture, realistic fabric and material response, accurate reflections, believable depth of field, correct perspective and scale, natural eye lines, anatomically correct hands and fingers, accurate object contact, and stable product geometry across frames.`,`Motion realism: natural body mechanics, subtle facial expressions, believable timing, controlled camera movement, no sudden morphing, no floating objects, no warped limbs, no extra fingers, no product redesign, no identity drift, no background architecture changes and no unexplained prop changes.`,`Camera language: premium modern lifestyle commercial, purposeful shot composition, realistic lens behavior, gentle handheld or stabilized movement only when motivated, clean focus transitions, restrained cinematic depth of field, and continuity-aware screen direction between scenes.`,`Performance direction: understated, believable acting. Avoid exaggerated influencer reactions unless the selected storyline is UGC. Keep gestures small and purposeful.`,`Audio and text: do not generate unrequested on-screen text, subtitles, watermarks, logos or UI overlays. If native audio is generated, keep ambience and speech natural and synchronized.`,`Provider handling: ${p.workflow}`,`Every scene must feel like the next shot from the same real production, not a separately generated clip.`].join(' ');
-  $('masterPrompt').value=prompt;$('masterStatus').textContent=`Generated for ${p.name}. You can edit it before creating the storyboard.`;showStatus(`Realistic master prompt generated for ${p.name}.`);if(scenes.length)render();}
+function saveProject(){try{const d=projectData();localStorage.setItem(STORAGE_KEY,JSON.stringify({d,scenes,promptEdits,ts:Date.now()}))}catch(e){}}
+function restoreProject(){try{const raw=localStorage.getItem(STORAGE_KEY);if(!raw)return;const s=JSON.parse(raw),d=s.d||{};['product','link','audience','benefit','details','story','masterPrompt'].forEach(k=>{if(d[k]!=null)$(k).value=d[k]});if(d.duration)$('duration').value=d.duration;if(d.format)$('format').value=d.format;if(d.storyType)$('storyType').value=d.storyType;if(d.provider)$('provider').value=d.provider;scenes=Array.isArray(s.scenes)?s.scenes:[];promptEdits=s.promptEdits||{};render();showStatus('Previous project restored. Reference images must be re-selected for browser privacy.')}catch(e){}}
+function generateAdStoryline(){const d=projectData(),type=$('storyType').value,buyer=d.audience||'the target buyer',benefit=d.benefit||'the product\'s key benefit';const M={problem:`Open on ${buyer} experiencing a specific, relatable frustration that ${d.product} is designed to solve. Make the problem visually obvious in a normal real-life setting. Introduce ${d.product} naturally at the moment the problem becomes inconvenient. Show the product being used and make its key feature easy to understand without explanation. End with the buyer experiencing ${benefit}, showing a small believable emotional payoff and a clean product moment with a direct CTA.`,hookdemo:`Start with a visually strong hook that immediately shows the desired outcome from ${d.product}. Cut into a clear product demonstration focused on the most important feature for ${buyer}. Show a believable proof moment where the result can be seen in action. Keep the product central, avoid exaggerated reactions, and finish with ${benefit} plus a concise CTA.`,ugc:`Begin like an authentic personal recommendation from someone who matches ${buyer}. They briefly show the problem they were dealing with, explain what made them try ${d.product}, then use it naturally on camera. Focus on one concrete benefit instead of a long feature list. End with an understated positive reaction, ${benefit}, and a recommendation-style CTA.`,beforeafter:`Show a clear BEFORE moment where ${buyer} deals with the pain point. Introduce ${d.product} as the bridge between the old experience and a better one. Demonstrate the exact action that creates the change. Then show an AFTER moment with visibly improved ease, comfort or result. Finish by reinforcing ${benefit} and the CTA.`,lifestyle:`Follow ${buyer} through one believable lifestyle moment where ${d.product} belongs naturally. Establish the setting and desire, introduce a small friction point, then let the product quietly improve the experience. Keep the acting subtle and aspirational rather than salesy. Finish with a satisfying lifestyle payoff, a short product hero moment and ${benefit}.`,objection:`Open with the most likely hesitation ${buyer} might have about buying or using ${d.product}. Show the product in a real situation that directly answers that concern. Demonstrate the feature or result that resolves the objection. Let the buyer visibly gain confidence, then close with ${benefit} and a conversion-focused CTA.`,tutorial:`Teach ${buyer} how to get a useful result with ${d.product} in three simple visual steps. Step 1 introduces the setup. Step 2 shows the key product action or feature. Step 3 reveals the completed result. Keep each step visually obvious and easy to understand without long text. Finish with ${benefit} and a simple CTA.`,unboxing:`Begin with ${buyer} discovering or receiving ${d.product}. Show the packaging reveal, then a close-up of the product and its most appealing physical detail. Move into the first real use, highlight the key feature through action, and end on a genuine first-impression reaction, ${benefit}, and a clean CTA.`};$('story').value=M[type];$('frameworkHint').textContent=storyHints[type];scenes=[];promptEdits={};render();saveProject()}
+function generateRealisticMasterPrompt(){const d=projectData(),refs=selectedRefs(),refText=refs.length?refs.join(' | '):'No reference files selected yet. Add character, location and product images when available.';const buyer=d.audience||'the intended buyer',benefit=d.benefit||'the primary product benefit',details=d.details||'preserve the real product design, materials, proportions and color';const prompt=[`Create a highly realistic, continuity-safe multi-scene product advertisement for ${d.product}.`,`Audience: ${buyer}.`,`Primary benefit and conversion goal: ${benefit}.`,`Product and visual fidelity: ${details}.`,`Output format: ${d.format}. Maximum length per scene: ${d.duration} seconds.`,`Continuity lock: use the same character identity, facial structure, age appearance, hairstyle, skin tone, wardrobe, body proportions, location architecture, furniture placement, time of day, lighting direction, props, product model, product color, dimensions and surface finish across every scene.`,`Reference plan: ${refText}`,`Photorealism: natural skin texture, realistic eyes and hair, physically plausible materials, accurate reflections, believable shadows, correct anatomy, correct hands and fingers, realistic product grip and contact, no floating objects, no morphing, no extra limbs, no identity drift and no product redesign.`,`Camera direction: realistic lens behavior, gentle stabilized movement only when motivated, clean focus transitions, restrained cinematic depth of field, and continuity-aware screen direction between scenes.`,`Performance direction: understated believable acting. Avoid exaggerated reactions unless the selected storyline is UGC.`,`Audio and text: do not generate unrequested on-screen text, subtitles, watermarks, logos or UI overlays. If native audio is generated, keep ambience and speech natural and synchronized.`,`Every scene must feel like the next shot from the same real production, not a separately generated clip.`].join(' ');$('masterPrompt').value=prompt;$('masterStatus').textContent='Provider-neutral master prompt generated. Provider-specific instructions are added only to each scene prompt.';if(scenes.length)render();saveProject()}
 function masterPrompt(){const d=projectData(),refs=selectedRefs();if(d.userMaster)return d.userMaster;const refLine=refs.length?`Reference images to add: ${refs.join(' | ')}.`:'Reference images to add: character, location and product references if available.';return[`Create a cohesive, photorealistic multi-scene commercial for ${d.product}.`,d.audience?`Target buyer: ${d.audience}.`:'',d.benefit?`Primary benefit / CTA: ${d.benefit}.`:'',`Maximum length per scene: ${d.duration} seconds.`,`Format: ${d.format}.`,'Continuity rule: keep the same character identity, face, hairstyle, wardrobe, body proportions, location architecture, lighting direction, props, product design, product color, product scale and overall visual language across every scene.',refLine,d.details?`Product and visual details: ${d.details}.`:'','Use realistic anatomy, natural believable motion, coherent hands and product interaction, physically plausible lighting, clean lifestyle-commercial cinematography, and no unrequested captions, text, watermarks or logos.'].filter(Boolean).join(' ')}
+function promptKey(sceneN,providerId=$('provider').value){return providerId+':'+sceneN}
 function providerPrompt(scene){const d=projectData(),p=providers[$('provider').value],refs=selectedRefs(),refText=refs.length?refs.join(' | '):'No local reference files selected yet. Add character, location and product references if available.';return`PROVIDER:\n${p.name}\n\nPROVIDER WORKFLOW:\n${p.workflow}\n\nMASTER PROMPT:\n${masterPrompt()}\n\nSCENE ${scene.n} PURPOSE:\n${scene.role}\n\nSCENE ACTION / STORY BEAT:\n${scene.action}\n\nMAXIMUM LENGTH:\n${d.duration} seconds\n\nFORMAT:\n${d.format}\n\nCONTINUITY FOR THIS SCENE:\nMatch the same character, location, product, wardrobe, lighting direction, props and visual tone established by the references and previous scene. Do not redesign the product or person.\n\nREFERENCE IMAGES TO ADD IN ${p.name.toUpperCase()}:\n${refText}\n\nCOPY-READY ${p.name.toUpperCase()} VIDEO PROMPT:\nUsing the master prompt and continuity references above, create Scene ${scene.n} for ${d.product}. ${scene.action} Keep the action readable within ${d.duration} seconds in ${d.format}. ${d.details?`Product and visual details: ${d.details}. `:''}Use a controlled single-scene progression with realistic motion and a natural visual bridge from the previous scene to the next scene. Preserve identity, environment and product consistency exactly.`}
-function buildScenes(){const story=$('story').value.trim();if(!story){alert('Add a storyline, script or lyrics first.');return}const parts=sentenceSplit(story),count=Math.max(3,Math.min(6,Math.ceil(parts.length/2)||3)),chunks=Array.from({length:count},()=>[]);parts.forEach((p,i)=>chunks[Math.min(count-1,Math.floor(i*count/Math.max(1,parts.length)))].push(p));const fallback=['Introduce the setting and the main problem.','Show the product being used as the solution.','Show the result, emotional payoff and final product moment.'];scenes=chunks.map((c,i)=>({n:i+1,role:i===0?'Setup / Problem':i===count-1?'Payoff / CTA':'Progression / Solution',action:c.join(' ')||fallback[Math.min(i,2)]}));render()}
-function render(){const box=$('storyboard');if(!scenes.length){box.className='empty';box.textContent='Your generated scenes will appear here.';return}const refs=selectedRefs(),p=providers[$('provider').value],d=projectData();box.className='';box.innerHTML=scenes.map(s=>`<article class="scene"><div class="scenehead"><h3>Scene ${s.n}</h3><span class="pill">${esc(s.role)}</span></div><div class="scenegrid"><div class="meta"><b>Story beat</b><br>${esc(s.action)}<br><br><b>Provider</b><br>${esc(p.name)}<div class="provider-rule">${esc(p.workflow)}</div><br><b>Continuity references</b><div class="refchips">${refs.length?refs.map(r=>`<span class="chip">${esc(r)}</span>`).join(''):'<span class="chip">No files selected</span>'}</div><br><b>Maximum length</b><br>${d.duration} seconds<br><br><b>Format</b><br>${esc(d.format)}</div><div><textarea id="prompt${s.n}">${esc(providerPrompt(s))}</textarea><div class="actions"><button class="btn peach" onclick="copyScene(${s.n})">Copy ${esc(p.name)} Prompt</button><button class="btn primary" onclick="sendScene(${s.n})">Send to ${esc(p.name)}</button></div></div></div></article>`).join('')}
-function updateProvider(){const p=providers[$('provider').value];$('providerTitle').textContent=p.name;$('providerHelp').textContent=p.desc;$('providerWorkflow').textContent=p.workflow;$('providerPros').innerHTML=p.pros.map(x=>`<li>${esc(x)}</li>`).join('');$('providerCons').innerHTML=p.cons.map(x=>`<li>${esc(x)}</li>`).join('');$('openProvider').textContent='Open '+p.name+' AI Video';if($('masterPrompt').value.trim())$('masterStatus').textContent=`Provider changed to ${p.name}. Click Generate Realistic Master Prompt to refresh provider-specific direction.`;if(scenes.length)render()}
+function splitIntoBeats(text){const paras=text.split(/\n\s*\n|\r?\n/).map(x=>x.trim()).filter(Boolean);let beats=[];for(const para of paras){let sent=para.split(/(?<=[.!?])\s+/).map(s=>s.trim()).filter(Boolean);if(!sent.length)sent=[para];for(const s of sent){if(s.length>220){const parts=s.split(/,|;|\bthen\b|\band\b/gi).map(x=>x.trim()).filter(x=>x.length>18);beats.push(...(parts.length>1?parts:[s]))}else beats.push(s)}}return beats.filter(Boolean)}
+function sceneComplexity(text){const actions=(text.match(/\b(and|then|while|after|before|reaches|opens|takes|inserts|walks|turns|shows|uses|looks|moves|speaks|smiles|nods)\b/gi)||[]).length;return text.length/90+actions*.45}
+function buildScenes(){const story=$('story').value.trim();if(!story){alert('Add a storyline, script or lyrics first.');return}const d=projectData();let beats=splitIntoBeats(story);if(!beats.length)beats=[story];const maxComplexity=Math.max(1.4,Number(d.duration)/3);let packed=[],current='';for(const beat of beats){const candidate=current?(current+' '+beat):beat;if(current&&sceneComplexity(candidate)>maxComplexity){packed.push(current);current=beat}else current=candidate}if(current)packed.push(current);if(packed.length<3){while(packed.length<3)packed.push(['Introduce the setting and the main problem.','Show the product being used as the solution.','Show the result, emotional payoff and final product moment.'][packed.length])}if(packed.length>6){const merged=[];for(let i=0;i<6;i++){const start=Math.floor(i*packed.length/6),end=Math.floor((i+1)*packed.length/6);merged.push(packed.slice(start,end).join(' '))}packed=merged}scenes=packed.map((action,i)=>({n:i+1,role:i===0?'Setup / Problem':i===packed.length-1?'Payoff / CTA':'Progression / Solution',action}));promptEdits={};render();saveProject()}
+function render(){const box=$('storyboard');if(!scenes.length){box.className='empty';box.textContent='Your generated scenes will appear here.';return}const refs=selectedRefs(),p=providers[$('provider').value],d=projectData();box.className='';box.innerHTML=scenes.map(s=>{const key=promptKey(s.n);const value=promptEdits[key]??providerPrompt(s);return`<article class="scene"><div class="scenehead"><h3>Scene ${s.n}</h3><span class="pill">${esc(s.role)}</span></div><div class="scenegrid"><div class="meta"><b>Story beat</b><br>${esc(s.action)}<br><br><b>Provider</b><br>${esc(p.name)}<div class="provider-rule">${esc(p.workflow)}</div><br><b>Continuity references</b><div class="refchips">${refs.length?refs.map(r=>`<span class="chip">${esc(r)}</span>`).join(''):'<span class="chip">No files selected</span>'}</div><br><b>Maximum length</b><br>${d.duration} seconds<br><br><b>Format</b><br>${esc(d.format)}</div><div><textarea id="prompt${s.n}" data-scene="${s.n}">${esc(value)}</textarea><div class="dirty-note">Edits are saved automatically for this provider.</div><div class="actions"><button class="btn peach" onclick="copyScene(${s.n})">Copy ${esc(p.name)} Prompt</button><button class="btn primary" onclick="sendScene(${s.n})">Copy + Open ${esc(p.name)}</button></div></div></div></article>`}).join('');box.querySelectorAll('textarea[data-scene]').forEach(t=>t.addEventListener('input',()=>{promptEdits[promptKey(Number(t.dataset.scene))]=t.value;saveProject()}))}
+function enforceProviderCapabilities(show=true){const p=providers[$('provider').value];let changed=[];if(Number($('duration').value)>p.maxDuration){$('duration').value=String(p.maxDuration);changed.push(`duration adjusted to ${p.maxDuration} seconds`)}if(!p.formats.includes($('format').value)){$('format').value=p.formats[0];changed.push(`format adjusted to ${p.formats[0]}`)}const warn=$('providerWarning');if(p.name==='Canva'){warn.textContent='Canva native Create a Video Clip is constrained here to 8 seconds and 16:9. Choose another Canva image-to-video workflow if you need references or different output settings.';warn.classList.add('show')}else warn.classList.remove('show');if(changed.length&&show)showStatus(`${p.name}: ${changed.join(', ')}.`)}
+function updateProvider(){const p=providers[$('provider').value];enforceProviderCapabilities();$('providerTitle').textContent=p.name;$('providerHelp').textContent=p.desc;$('providerAccess').textContent='Access: '+p.access;$('providerWorkflow').textContent=p.workflow;$('providerPros').innerHTML=p.pros.map(x=>`<li>${esc(x)}</li>`).join('');$('providerCons').innerHTML=p.cons.map(x=>`<li>${esc(x)}</li>`).join('');$('openProvider').textContent='Open '+p.name+' AI Video';if(scenes.length)render();saveProject()}
 function openProvider(){window.open(providers[$('provider').value].url,'_blank','noopener')}
-window.copyScene=async n=>{const s=scenes.find(x=>x.n===n),p=providers[$('provider').value];await cp(providerPrompt(s));showStatus(`Scene ${n} ${p.name} prompt copied.`)};
-window.sendScene=async n=>{const s=scenes.find(x=>x.n===n),p=providers[$('provider').value];await cp(providerPrompt(s));const refs=selectedRefs();showStatus(`Scene ${n} prompt copied. Opening ${p.name}.${refs.length?' Add: '+refs.join(' | '):' Add continuity references if available.'}`);window.open(p.url,'_blank','noopener')};
+window.copyScene=async n=>{const el=$('prompt'+n);await cp(el?el.value:'');showStatus(`Scene ${n} prompt copied.`)};
+window.sendScene=async n=>{const p=providers[$('provider').value];const tab=window.open('about:blank','_blank');const el=$('prompt'+n);await cp(el?el.value:'');if(tab)tab.location=p.url;else window.location.href=p.url;showStatus(`Scene ${n} prompt copied. Opening ${p.name}. Add continuity references if available.`)};
 $('generate').onclick=buildScenes;$('generateStory').onclick=generateAdStoryline;$('generateMaster').onclick=generateRealisticMasterPrompt;$('provider').onchange=updateProvider;$('openProvider').onclick=openProvider;
-$('copyAll').onclick=async()=>{if(!scenes.length)return;const p=providers[$('provider').value];await cp(scenes.map(s=>`===== SCENE ${s.n} / ${p.name.toUpperCase()} =====\n${providerPrompt(s)}`).join('\n\n'));showStatus(`All ${p.name} prompts copied.`)};
-$('reset').onclick=()=>{['product','link','audience','benefit','story','details','masterPrompt'].forEach(x=>$(x).value='');['charRef','locRef','prodRef'].forEach(x=>$(x).value='');['charName','locName','prodName'].forEach(x=>$(x).textContent='No file selected');scenes=[];render()};
-$('storyType').onchange=()=>{$('frameworkHint').textContent=storyHints[$('storyType').value]};
-[['charRef','charName'],['locRef','locName'],['prodRef','prodName']].forEach(([input,name])=>$(input).onchange=()=>{$(name).textContent=$(input).files[0]?.name||'No file selected';if(scenes.length)render()});
-updateProvider();
-
-// 5-second interactive startup
+$('copyAll').onclick=async()=>{if(!scenes.length)return;const p=providers[$('provider').value];const text=scenes.map(s=>{const el=$('prompt'+s.n);return`===== SCENE ${s.n} / ${p.name.toUpperCase()} =====\n${el?el.value:(promptEdits[promptKey(s.n)]??providerPrompt(s))}`}).join('\n\n');await cp(text);showStatus(`All ${p.name} prompts copied.`)};
+$('reset').onclick=()=>{const has=Object.values(projectData()).some(v=>String(v||'').trim())||scenes.length;if(has&&!confirm('Clear this PupScene project? This removes text, storyboard and saved prompt edits from this browser.'))return;['product','link','audience','benefit','story','details','masterPrompt'].forEach(x=>$(x).value='');['charRef','locRef','prodRef'].forEach(x=>$(x).value='');['charName','locName','prodName'].forEach(x=>$(x).textContent='No file selected');['charPreview','locPreview','prodPreview'].forEach(id=>{$(id).src='';$(id).classList.remove('show')});scenes=[];promptEdits={};localStorage.removeItem(STORAGE_KEY);render()};
+$('storyType').onchange=()=>{$('frameworkHint').textContent=storyHints[$('storyType').value];saveProject()};
+['product','link','audience','benefit','story','details','masterPrompt','duration','format'].forEach(id=>$(id).addEventListener('input',saveProject));
+[['charRef','charName','charPreview'],['locRef','locName','locPreview'],['prodRef','prodName','prodPreview']].forEach(([input,name,preview])=>$(input).onchange=()=>{const f=$(input).files[0];$(name).textContent=f?.name||'No file selected';if(refPreviewUrls[input])URL.revokeObjectURL(refPreviewUrls[input]);if(f){refPreviewUrls[input]=URL.createObjectURL(f);$(preview).src=refPreviewUrls[input];$(preview).classList.add('show')}else{$(preview).src='';$(preview).classList.remove('show')}if(scenes.length)render();saveProject()});
 const splash=$('splash'),pup=$('splashPup');
-function closeSplash(){splash.classList.add('exit');document.body.classList.remove('intro-active');setTimeout(()=>splash.remove(),600)}
-setTimeout(closeSplash,5000);
-pup.addEventListener('click',()=>{bark();pup.classList.remove('boop');void pup.offsetWidth;pup.classList.add('boop')});
+function closeSplash(){if(!splash||splash.classList.contains('exit'))return;localStorage.setItem(INTRO_KEY,'1');splash.classList.add('exit');document.body.classList.remove('intro-active');setTimeout(()=>splash.remove(),600)}
+$('skipIntro').addEventListener('click',closeSplash);
+if(localStorage.getItem(INTRO_KEY)==='1')setTimeout(closeSplash,150);else setTimeout(closeSplash,5000);
+pup.setAttribute('role','button');pup.setAttribute('tabindex','0');pup.setAttribute('aria-label','PupScene puppy mascot. Activate to hear a bark.');
+function boop(){bark();pup.classList.remove('boop');void pup.offsetWidth;pup.classList.add('boop')}
+pup.addEventListener('click',boop);pup.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();boop()}});
 splash.addEventListener('pointermove',e=>{if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;const r=splash.getBoundingClientRect(),x=(e.clientX-r.width/2)/r.width,y=(e.clientY-r.height/2)/r.height;pup.style.transform=`translate(${x*16}px,${y*10}px) rotate(${x*3}deg)`});
 splash.addEventListener('pointerleave',()=>{pup.style.transform=''})
-
-// Cute synthetic puppy bark, no external audio file needed
-let audioCtx;
-function bark(){
-  try{
-    audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();
-    const now=audioCtx.currentTime;
-    const master=audioCtx.createGain(); master.gain.setValueAtTime(0.0001,now); master.gain.exponentialRampToValueAtTime(.22,now+.01); master.gain.exponentialRampToValueAtTime(0.0001,now+.24); master.connect(audioCtx.destination);
-    [0,0.11].forEach((delay,i)=>{
-      const osc=audioCtx.createOscillator(),g=audioCtx.createGain();
-      osc.type='sawtooth';
-      osc.frequency.setValueAtTime(i?240:285,now+delay);
-      osc.frequency.exponentialRampToValueAtTime(i?150:175,now+delay+.11);
-      g.gain.setValueAtTime(.0001,now+delay); g.gain.exponentialRampToValueAtTime(i?.24:.34,now+delay+.008); g.gain.exponentialRampToValueAtTime(.0001,now+delay+.12);
-      osc.connect(g); g.connect(master); osc.start(now+delay); osc.stop(now+delay+.13);
-    });
-  }catch(e){}
-}
-
-// Draggable hero puppy. Its CSS position inside the peach circle remains the default rest state.
-const heroPup=$('heroPup');
-if(heroPup){
-  let dragging=false,startX=0,startY=0,dx=0,dy=0,moved=false;
-  const apply=()=>heroPup.style.transform=`translate(${dx}px,${dy}px)`;
-  heroPup.addEventListener('pointerdown',e=>{dragging=true;moved=false;startX=e.clientX-dx;startY=e.clientY-dy;heroPup.classList.add('dragging');heroPup.setPointerCapture?.(e.pointerId)});
-  heroPup.addEventListener('pointermove',e=>{if(!dragging)return;const ndx=e.clientX-startX,ndy=e.clientY-startY;if(Math.abs(ndx-dx)+Math.abs(ndy-dy)>4)moved=true;dx=ndx;dy=ndy;apply()});
-  const endDrag=e=>{if(!dragging)return;dragging=false;heroPup.classList.remove('dragging');if(!moved)bark()};
-  heroPup.addEventListener('pointerup',endDrag);heroPup.addEventListener('pointercancel',endDrag);
-}
-
-
-// PWA install support for mobile and desktop
-let deferredInstallPrompt=null;
-const installBtn=$('installBtn');
+let audioCtx;function bark(){try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();const now=audioCtx.currentTime,master=audioCtx.createGain();master.gain.setValueAtTime(.0001,now);master.gain.exponentialRampToValueAtTime(.22,now+.01);master.gain.exponentialRampToValueAtTime(.0001,now+.24);master.connect(audioCtx.destination);[0,.11].forEach((delay,i)=>{const osc=audioCtx.createOscillator(),g=audioCtx.createGain();osc.type='sawtooth';osc.frequency.setValueAtTime(i?240:285,now+delay);osc.frequency.exponentialRampToValueAtTime(i?150:175,now+delay+.11);g.gain.setValueAtTime(.0001,now+delay);g.gain.exponentialRampToValueAtTime(i?.24:.34,now+delay+.008);g.gain.exponentialRampToValueAtTime(.0001,now+delay+.12);osc.connect(g);g.connect(master);osc.start(now+delay);osc.stop(now+delay+.13)})}catch(e){}}
+const heroPup=$('heroPup'),hero=document.querySelector('.hero');let dx=0,dy=0,dragging=false,startX=0,startY=0,moved=false;
+function constrain(x,y){const hr=hero.getBoundingClientRect(),pr=heroPup.getBoundingClientRect();const baseLeft=pr.left-dx,baseTop=pr.top-dy;const minX=hr.left-baseLeft,maxX=hr.right-(baseLeft+pr.width),minY=hr.top-baseTop,maxY=hr.bottom-(baseTop+pr.height);return[Math.min(maxX,Math.max(minX,x)),Math.min(maxY,Math.max(minY,y))]}
+function applyPup(){heroPup.style.transform=`translate(${dx}px,${dy}px)`}
+function resetPup(){dx=0;dy=0;applyPup()}
+$('resetPup').onclick=resetPup;
+heroPup.addEventListener('pointerdown',e=>{dragging=true;moved=false;startX=e.clientX-dx;startY=e.clientY-dy;heroPup.classList.add('dragging');heroPup.setPointerCapture?.(e.pointerId)});
+heroPup.addEventListener('pointermove',e=>{if(!dragging)return;let nx=e.clientX-startX,ny=e.clientY-startY;[nx,ny]=constrain(nx,ny);if(Math.abs(nx-dx)+Math.abs(ny-dy)>4)moved=true;dx=nx;dy=ny;applyPup()});
+function endDrag(){if(!dragging)return;dragging=false;heroPup.classList.remove('dragging');if(!moved)bark()}
+heroPup.addEventListener('pointerup',endDrag);heroPup.addEventListener('pointercancel',endDrag);heroPup.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();bark()}if(e.key==='Escape')resetPup()});
+let deferredInstallPrompt=null;const installBtn=$('installBtn'),installHelp=$('installHelp');const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);const isStandalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
 function setInstallReady(ready){if(!installBtn)return;installBtn.classList.toggle('show',!!ready);installBtn.disabled=!ready}
+if(isIOS&&!isStandalone){installHelp.textContent='iPhone/iPad: in Safari, tap Share, then Add to Home Screen to install PupScene Studio.';installHelp.classList.add('show')}
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstallPrompt=e;setInstallReady(true)});
-if(installBtn){installBtn.addEventListener('click',async()=>{if(!deferredInstallPrompt){showStatus('Install prompt not available yet. On mobile, use Add to Home Screen. On desktop, your browser menu may still show Install PupScene Studio.');return;}deferredInstallPrompt.prompt();try{await deferredInstallPrompt.userChoice;}catch(e){}deferredInstallPrompt=null;setInstallReady(false);});}
-window.addEventListener('appinstalled',()=>{deferredInstallPrompt=null;setInstallReady(false);showStatus('PupScene Studio installed successfully.');});
-if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('./service-worker.js').catch(()=>{});});}
-
+installBtn.addEventListener('click',async()=>{if(!deferredInstallPrompt){installHelp.textContent='Install prompt is not available in this browser yet. Use the browser menu and choose Install app / Add to Home Screen.';installHelp.classList.add('show');return}deferredInstallPrompt.prompt();try{await deferredInstallPrompt.userChoice}catch(e){}deferredInstallPrompt=null;setInstallReady(false)});
+window.addEventListener('appinstalled',()=>{deferredInstallPrompt=null;setInstallReady(false);installHelp.classList.remove('show');showStatus('PupScene Studio installed successfully.')});
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('/service-worker.js').catch(err=>console.warn('Service worker registration failed',err)))}
+restoreProject();updateProvider();$('frameworkHint').textContent=storyHints[$('storyType').value];
 </script>
 </body>
 </html>

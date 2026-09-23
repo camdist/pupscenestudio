@@ -1,9 +1,10 @@
 {
+  "id": "/",
   "name": "PupScene Studio",
   "short_name": "PupScene",
   "description": "AI-video planning studio for provider-aware product ad storyboards and prompts.",
-  "start_url": "./index.html",
-  "scope": "./",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#fbfaf9",
   "theme_color": "#F6D7C7",

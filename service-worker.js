@@ -1,5 +1,5 @@
-const CACHE='pupscene-v8';
-const ASSETS=['./','./index.html','./manifest.webmanifest','./assets/app-logo.png','./assets/pupscene-puppy.png','./assets/icon-192.png','./assets/icon-512.png','./assets/apple-touch-icon.png','./assets/favicon-32.png','./assets/favicon-16.png'];
-self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting()))});
-self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
-self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(resp=>{const copy=resp.clone();caches.open(CACHE).then(c=>c.put(e.request,copy)).catch(()=>{});return resp;}).catch(()=>r)))});
+const CACHE='pupscene-v9';
+const CORE=['/','/index.html','/manifest.webmanifest','/assets/app-logo.webp','/assets/pupscene-puppy.webp','/assets/icon-192.png','/assets/icon-512.png','/assets/apple-touch-icon.png','/assets/favicon-32.png','/assets/favicon-16.png'];
+self.addEventListener('install',event=>{event.waitUntil((async()=>{const c=await caches.open(CACHE);for(const url of CORE){try{await c.add(url)}catch(e){}}await self.skipWaiting()})())});
+self.addEventListener('activate',event=>{event.waitUntil((async()=>{for(const k of await caches.keys()){if(k!==CACHE)await caches.delete(k)}await self.clients.claim()})())});
+self.addEventListener('fetch',event=>{if(event.request.method!=='GET')return;const req=event.request;const isNav=req.mode==='navigate'||req.destination==='document';if(isNav){event.respondWith((async()=>{try{const fresh=await fetch(req);const c=await caches.open(CACHE);c.put(req,fresh.clone()).catch(()=>{});return fresh}catch(e){return (await caches.match(req))||(await caches.match('/index.html'))}})());return;}event.respondWith((async()=>{const cached=await caches.match(req);const fetchPromise=fetch(req).then(async fresh=>{const c=await caches.open(CACHE);c.put(req,fresh.clone()).catch(()=>{});return fresh}).catch(()=>cached);return cached||fetchPromise})())});
