@@ -1,4 +1,4 @@
-const CACHE='pupscene-v9';
+const CACHE='pupscene-beta-v9-1';
 const CORE=['/','/index.html','/manifest.webmanifest','/assets/app-logo.webp','/assets/pupscene-puppy.webp','/assets/icon-192.png','/assets/icon-512.png','/assets/apple-touch-icon.png','/assets/favicon-32.png','/assets/favicon-16.png'];
 self.addEventListener('install',event=>{event.waitUntil((async()=>{const c=await caches.open(CACHE);for(const url of CORE){try{await c.add(url)}catch(e){}}await self.skipWaiting()})())});
 self.addEventListener('activate',event=>{event.waitUntil((async()=>{for(const k of await caches.keys()){if(k!==CACHE)await caches.delete(k)}await self.clients.claim()})())});
