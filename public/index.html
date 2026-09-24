@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="theme-color" content="#F6D7C7" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="PupScene Studio" />
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png" />
+<link rel="stylesheet" href="assets/commerce.css" />
+<meta name="description" content="PupScene Studio turns product ideas into connected AI video ad storyboards, continuity plans and provider-ready prompts." />
+<title>PupScene Studio</title>
+<style>
+:root{
+  --black:#111111;
+  --black-2:#252525;
+  --white:#ffffff;
+  --off:#fbfaf9;
+  --peach:#f6d7c7;
+  --peach-2:#fbe9df;
+  --peach-3:#eebfa9;
+  --line:#e9e5e2;
+  --muted:#6c6967;
+  --shadow:0 18px 50px rgba(17,17,17,.08);
+  --radius:24px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--off);color:var(--black);font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.5}
+body.intro-active{overflow:hidden}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+
+/* Splash */
+#splash{position:fixed;inset:0;z-index:9999;background:var(--black);display:grid;place-items:center;overflow:hidden;transition:opacity .55s ease,visibility .55s ease}
+#splash.exit{opacity:0;visibility:hidden}
+.splash-orb{position:absolute;width:62vw;height:62vw;max-width:760px;max-height:760px;border-radius:50%;background:var(--peach);filter:blur(2px);left:50%;top:46%;transform:translate(-50%,-50%)}
+.splash-inner{position:relative;z-index:2;text-align:center;color:var(--black);width:min(92vw,900px);padding:30px}
+.splash-logo{display:inline-flex;align-items:center;gap:12px;background:#fff;color:var(--black);padding:10px 16px;border-radius:999px;font-weight:900;letter-spacing:-.03em;box-shadow:0 14px 35px rgba(0,0,0,.18)}
+.logo-mark{width:38px;height:38px;display:grid;place-items:center;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 8px 18px rgba(0,0,0,.12);border:1px solid rgba(17,17,17,.06)}
+.logo-mark img{width:100%;height:100%;object-fit:cover;display:block}
+.splash-title{font-size:clamp(48px,9vw,100px);line-height:.88;letter-spacing:-.075em;margin:28px auto 12px;color:var(--black);max-width:8ch;text-shadow:0 2px 0 rgba(255,255,255,.2)}
+.splash-sub{color:var(--black);font-size:15px;font-weight:800;margin:0 auto 16px;background:rgba(255,255,255,.72);border:1px solid rgba(17,17,17,.12);padding:8px 12px;border-radius:999px;width:max-content;max-width:92%;backdrop-filter:blur(6px)}
+.splash-pup-wrap{width:min(44vw,350px);margin:0 auto -12px;position:relative;will-change:transform;transition:transform .16s ease-out;cursor:pointer;user-select:none}
+.splash-pup-wrap img{width:100%;display:block;filter:drop-shadow(0 24px 22px rgba(17,17,17,.18));pointer-events:none}
+.splash-pup-wrap.boop{animation:boop .5s cubic-bezier(.2,.8,.2,1)}
+@keyframes boop{0%{transform:scale(1)}35%{transform:scale(1.08) rotate(-3deg)}70%{transform:scale(.98) rotate(2deg)}100%{transform:scale(1)}}
+.splash-progress{width:min(340px,70vw);height:4px;border-radius:99px;background:rgba(17,17,17,.13);margin:22px auto 0;overflow:hidden}
+.splash-progress>span{display:block;height:100%;background:var(--black);width:0;animation:countdown 5s linear forwards}
+@keyframes countdown{to{width:100%}}
+.splash-hint{margin-top:10px;color:var(--black);font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;background:rgba(246,215,199,.9);display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid rgba(17,17,17,.1)}
+
+header{position:sticky;top:0;z-index:30;background:rgba(251,250,249,.92);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+.wrap{max-width:1200px;margin:auto;padding:14px 22px}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand-logo{display:flex;align-items:center;gap:10px;font-size:21px;font-weight:950;letter-spacing:-.045em}
+.brand-logo .logo-mark{width:42px;height:42px}
+.brand-logo em{font-style:normal;color:#b5684b}
+.nav-chip{border:1px solid var(--black);border-radius:999px;padding:7px 11px;font-size:11px;font-weight:900;background:#fff}.nav-actions{display:flex;align-items:center;gap:10px}.install-btn{display:none;border:1px solid var(--black);background:var(--peach);color:var(--black);border-radius:999px;padding:8px 12px;font-size:11px;font-weight:900;box-shadow:0 8px 20px rgba(17,17,17,.08)}.install-btn.show{display:inline-flex;align-items:center;gap:6px}
+main{max-width:1200px;margin:auto;padding:28px 22px 80px}
+
+.hero{position:relative;overflow:hidden;background:var(--white);border:1px solid var(--line);border-radius:32px;min-height:480px;padding:54px 50px;display:grid;grid-template-columns:1.04fr .96fr;align-items:center;box-shadow:var(--shadow)}
+.hero:after{content:"";position:absolute;width:540px;height:540px;border-radius:50%;background:var(--peach);right:-80px;top:-55px}
+.hero-copy{position:relative;z-index:2;max-width:650px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;background:var(--peach-2);border:1px solid #f2cfbd;border-radius:999px;padding:7px 11px;font-size:11px;font-weight:900;letter-spacing:.04em;text-transform:uppercase}
+.hero h1{font-size:clamp(46px,7vw,82px);line-height:.9;letter-spacing:-.07em;margin:18px 0 16px;max-width:8.2ch}
+.hero p{font-size:18px;line-height:1.65;color:var(--muted);max-width:590px;margin:0}
+.hero-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:24px}.hero-tags span{border:1px solid var(--line);border-radius:999px;background:#fff;padding:7px 10px;font-size:11px;font-weight:850}
+.hero-pup{position:absolute;z-index:4;right:-10px;bottom:-28px;width:min(46%,520px);filter:drop-shadow(0 24px 30px rgba(17,17,17,.16));cursor:grab;touch-action:none;user-select:none;will-change:transform;transition:filter .2s ease}
+.hero-pup.dragging{cursor:grabbing;filter:drop-shadow(0 30px 34px rgba(17,17,17,.22))}
+.hero-pup img{width:100%;display:block;pointer-events:none}
+.hero-pup-hint{position:absolute;z-index:5;right:26px;bottom:26px;background:rgba(255,255,255,.9);color:var(--black);border:1px solid rgba(17,17,17,.12);border-radius:999px;padding:7px 10px;font-size:10px;font-weight:900;letter-spacing:.04em;box-shadow:0 6px 20px rgba(17,17,17,.08);pointer-events:none}
+
+.section{margin-top:18px}.card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:0 10px 34px rgba(17,17,17,.045)}
+.section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}.section-title h2{margin:0;font-size:24px;letter-spacing:-.04em}.small{font-size:12px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.field{display:grid;gap:7px}.field.full{grid-column:1/-1}label{font-size:12px;font-weight:900}
+input,textarea,select{width:100%;border:1px solid var(--line);border-radius:14px;background:#fff;color:var(--black);padding:12px 13px;outline:none;transition:.18s ease}textarea{min-height:110px;resize:vertical}input:focus,textarea:focus,select:focus{border-color:var(--black);box-shadow:0 0 0 4px rgba(246,215,199,.75)}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}.btn{border:1px solid transparent;border-radius:14px;padding:11px 15px;font-weight:900;transition:.18s ease}.btn:hover{transform:translateY(-1px)}.btn:active{transform:translateY(1px)}.btn.primary{background:var(--black);color:#fff}.btn.peach{background:var(--peach);color:var(--black);border-color:#edc3ae}.btn.ghost{background:#fff;color:var(--black);border-color:var(--line)}.btn.slim{padding:9px 12px;font-size:12px}
+.story-tools{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end;margin-top:8px}.framework-hint,.notice{margin-top:10px;padding:11px 13px;border-radius:13px;background:var(--peach-2);border:1px solid #f0cfbe;color:#654a3e;font-size:12px;line-height:1.55}.master-status{font-size:12px;color:var(--muted);margin-top:6px}
+
+.refs{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.refbox{border:1px dashed #cfc9c5;border-radius:17px;padding:15px;background:#fdfcfc;min-height:135px}.refbox b{display:block;margin-bottom:5px}.refbox input{margin-top:9px;font-size:12px}.file-name{display:block;margin-top:8px;color:var(--muted);font-size:11px;word-break:break-word}
+
+.provider-layout{display:grid;grid-template-columns:.72fr 1.28fr;gap:16px}.provider-card{border-radius:20px;background:var(--black);color:#fff;padding:20px;min-height:230px;position:relative;overflow:hidden}.provider-card:after{content:"";position:absolute;width:170px;height:170px;border-radius:50%;background:var(--peach);right:-60px;bottom:-80px}.provider-name{font-size:27px;font-weight:950;letter-spacing:-.045em;margin:4px 0 7px}.provider-desc{font-size:13px;line-height:1.55;color:rgba(255,255,255,.74);max-width:62ch;position:relative;z-index:2}.provider-meta{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:15px;position:relative;z-index:2}.pc{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:12px}.pc h4{font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 7px;color:var(--peach)}.pc ul{margin:0;padding-left:17px;font-size:12px;color:rgba(255,255,255,.83)}.pc li+li{margin-top:4px}.provider-workflow{margin-top:12px;padding:11px 12px;border-radius:13px;background:#fff;color:var(--black);font-size:12px;line-height:1.5;position:relative;z-index:2}
+.status{display:none;margin-top:10px;border-radius:12px;padding:10px 12px;background:var(--peach-2);font-size:12px;color:#5c4338}.status.show{display:block}
+
+.scene{border:1px solid var(--line);border-radius:20px;padding:18px;background:#fff;margin-top:14px;box-shadow:0 8px 28px rgba(17,17,17,.035)}.scenehead{display:flex;align-items:center;justify-content:space-between;gap:10px}.scene h3{margin:0;font-size:20px}.pill{font-size:10px;text-transform:uppercase;letter-spacing:.06em;font-weight:900;padding:6px 9px;border-radius:999px;background:var(--peach-2);border:1px solid #f0cfbe}.scenegrid{display:grid;grid-template-columns:.72fr 1.28fr;gap:14px;margin-top:13px}.meta{font-size:13px;color:var(--muted);line-height:1.6}.meta b{color:var(--black)}.refchips{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}.chip{font-size:10px;padding:5px 7px;border-radius:999px;background:#f5f3f2;border:1px solid var(--line)}.provider-rule{margin-top:9px;padding:10px;border-radius:12px;background:#f7f5f4;color:#4d4845;font-size:11px;line-height:1.5}.scene textarea{width:100%;min-height:400px;border:1px solid var(--line);border-radius:14px;padding:13px;background:#fdfcfc;font:12px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;color:#262321}.empty{text-align:center;color:var(--muted);padding:34px 10px}
+footer{text-align:center;color:var(--muted);font-size:11px;padding:30px}
+/* Paid-app foundation: library, feedback and legal */
+.top-action{border:1px solid var(--line);background:#fff;color:var(--black);border-radius:999px;padding:8px 11px;font-size:11px;font-weight:900}.top-action:hover{border-color:var(--black)}
+.library-toolbar{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.library-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}.project-item{border:1px solid var(--line);border-radius:18px;padding:15px;background:#fdfcfc}.project-item h3{margin:0;font-size:16px;letter-spacing:-.025em}.project-meta{font-size:11px;color:var(--muted);margin-top:4px}.project-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}.empty-library{border:1px dashed #d5cfcb;border-radius:18px;padding:18px;color:var(--muted);background:#fdfcfc;font-size:13px}.storage-note{margin-top:10px;font-size:11px;color:var(--muted)}
+.modal-backdrop{position:fixed;inset:0;z-index:10000;background:rgba(17,17,17,.58);display:none;align-items:center;justify-content:center;padding:18px}.modal-backdrop.show{display:flex}.modal{width:min(720px,100%);max-height:min(86vh,860px);overflow:auto;background:#fff;border-radius:24px;border:1px solid var(--line);box-shadow:0 28px 90px rgba(0,0,0,.28)}.modal-head{position:sticky;top:0;background:#fff;z-index:2;padding:18px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px}.modal-head h2{margin:0;font-size:22px;letter-spacing:-.035em}.modal-body{padding:20px}.modal-close{width:38px;height:38px;border-radius:12px;border:1px solid var(--line);background:#fff;font-size:20px;font-weight:900}.legal-copy h3{margin:20px 0 6px;font-size:16px}.legal-copy h3:first-child{margin-top:0}.legal-copy p,.legal-copy li{font-size:13px;line-height:1.65;color:#4f4a47}.legal-copy ul{padding-left:20px}.legal-date{display:inline-block;margin-bottom:12px;font-size:11px;font-weight:900;background:var(--peach-2);border:1px solid #f0cfbe;border-radius:999px;padding:6px 9px}.feedback-note{font-size:12px;color:var(--muted);margin-top:8px}.footer-links{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:8px}.footer-links button{border:0;background:transparent;color:var(--black);text-decoration:underline;text-underline-offset:3px;padding:2px;font-size:11px}.domain-note{margin-top:7px;font-size:10px;color:#8b8581}
+@media(max-width:720px){.library-list{grid-template-columns:1fr}.top-action{padding:8px 9px}.nav-actions{gap:6px}.nav-actions .top-action span{display:none}}
+
+
+@media(max-width:900px){.hero{grid-template-columns:1fr;min-height:590px;padding:40px 28px}.hero-copy{padding-bottom:230px}.hero-pup{width:430px;max-width:78%;right:-55px}.grid,.scenegrid,.provider-layout{grid-template-columns:1fr}.refs{grid-template-columns:1fr}.provider-meta{grid-template-columns:1fr}.wrap,main{padding-left:14px;padding-right:14px}.section-title{align-items:flex-start;flex-direction:column}.story-tools{grid-template-columns:1fr}.nav-chip{display:none}.nav-actions{margin-left:auto}}
+@media(max-width:520px){.hero{padding:32px 20px}.hero h1{font-size:46px;line-height:.94}.hero p{font-size:16px;color:#3f3a37}.hero-copy{padding-bottom:190px}.hero-pup{width:320px;right:-48px;bottom:-18px}.hero-pup-hint{right:12px;bottom:12px}.card{padding:17px}.scene textarea{min-height:440px}.splash-inner{width:100%;padding:22px 16px}.splash-orb{width:118vw;height:118vw;top:47%}.splash-title{font-size:48px;line-height:.92;max-width:9ch;margin-top:20px}.splash-sub{font-size:13px;line-height:1.35;max-width:88%;white-space:normal}.splash-pup-wrap{width:min(62vw,280px)}.splash-logo{font-size:13px}.splash-hint{font-size:9px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+.skip-intro{position:absolute;z-index:4;top:18px;right:18px;border:1px solid rgba(17,17,17,.25);background:#fff;color:var(--black);border-radius:999px;padding:8px 12px;font-size:11px;font-weight:900;box-shadow:0 8px 22px rgba(0,0,0,.12)}
+.ref-preview{margin-top:10px;width:100%;aspect-ratio:4/3;border-radius:12px;object-fit:cover;display:none;border:1px solid var(--line);background:#f5f3f2}.ref-preview.show{display:block}.access-line{margin-top:10px;font-size:11px;font-weight:900;color:var(--peach);position:relative;z-index:2}.install-help{display:none;margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--peach-2);border:1px solid #f0cfbe;color:#5c4338;font-size:12px}.install-help.show{display:block}.hero-pup-reset{position:absolute;z-index:5;right:26px;bottom:62px;border:1px solid rgba(17,17,17,.12);background:rgba(255,255,255,.92);color:var(--black);border-radius:999px;padding:7px 10px;font-size:10px;font-weight:900;box-shadow:0 6px 20px rgba(17,17,17,.08)}.dirty-note{margin-top:6px;font-size:10px;color:#8a5a46}.provider-warning{margin-top:10px;padding:10px 12px;border-radius:12px;background:#fff4ee;border:1px solid #efc8b6;color:#6c4739;font-size:12px;display:none}.provider-warning.show{display:block}
+.top-action{text-decoration:none}
+#authGuard{position:fixed;inset:0;z-index:12000;background:#fbfaf9;display:grid;place-items:center;padding:20px}#authGuard.hidden{display:none!important}.auth-check{max-width:430px;text-align:center;background:#fff;border:1px solid var(--line);border-radius:24px;padding:28px;box-shadow:var(--shadow)}.auth-check img{width:70px;height:70px;border-radius:18px}.auth-check h2{margin:14px 0 6px}.usage-low{background:#fff0ed!important;border-color:#efc3b8!important}
+</style>
+</head>
+<body class="intro-active"><div id="authGuard"><div class="auth-check"><img src="assets/app-logo.webp" alt="PupScene"><h2>Checking your PupScene access…</h2><p class="small">Securely verifying your account and storyboard plan.</p></div></div>
+<div id="splash" aria-label="PupScene Studio intro">
+  <button class="skip-intro" id="skipIntro" type="button">Skip intro</button>
+  <div class="splash-orb"></div>
+  <div class="splash-inner">
+    <div class="splash-logo"><span class="logo-mark"><img src="assets/app-logo.webp" alt="PupScene Studio logo"></span>PupScene Studio</div>
+    <div id="splashPup" class="splash-pup-wrap" title="Boop the puppy"><img src="assets/pupscene-puppy.webp" alt="PupScene puppy mascot"></div>
+    <h1 class="splash-title">Ideas in. Scenes out.</h1>
+    <p class="splash-sub">Your continuity-first AI video planning studio.</p>
+    <div class="splash-progress"><span></span></div>
+    <div class="splash-hint">Starting studio in 5 seconds · tap the puppy</div>
+  </div>
+</div>
+
+<header>
+  <div class="wrap nav">
+    <div class="brand-logo"><span class="logo-mark"><img src="assets/app-logo.webp" alt="PupScene Studio logo"></span>PupScene <em>Studio</em></div>
+    <div class="nav-actions"><div class="nav-chip" id="accountUsage">Checking access…</div><button class="top-action" id="libraryJump" title="Open Project Library">📁 <span>Projects</span></button><button class="top-action" id="feedbackOpen" title="Send feedback">💬 <span>Feedback</span></button><a class="top-action" id="accountLink" href="account.html" title="My account">👤 <span>Account</span></a><a class="top-action hidden" id="adminLink" href="admin.html" title="Admin dashboard">⚙ <span>Admin</span></a><button class="install-btn" id="installBtn" title="Install PupScene Studio">Install app</button></div>
+  </div>
+</header>
+<div class="wrap"><div id="installHelp" class="install-help"></div></div>
+<main>
+<section class="hero">
+  <div class="hero-copy">
+    <span class="eyebrow">Lifestyle creative studio</span>
+    <h1>Make product scenes feel real.</h1>
+    <p>Build conversion-focused storylines, realistic master prompts, continuity references and provider-aware scene prompts for the AI video tool you choose.</p>
+    <div class="hero-tags"><span>Ad story frameworks</span><span>Master realism prompt</span><span>10 sec max</span><span>Provider aware</span></div>
+  </div>
+  <div class="hero-pup" id="heroPup" role="button" tabindex="0" aria-label="Draggable PupScene puppy mascot. Tap for bark."><img src="assets/pupscene-puppy.webp" alt="PupScene puppy mascot"></div><button class="hero-pup-reset" id="resetPup" type="button">Reset pup</button><div class="hero-pup-hint">Drag the pup</div>
+</section>
+
+<section class="section card" id="projectLibrary">
+  <div class="section-title"><h2>Project Library</h2><span class="small">Saved on this device</span></div>
+  <div class="library-toolbar">
+    <button class="btn primary" id="saveToLibrary">Save Current Project</button>
+    <button class="btn ghost" id="newProject">New Project</button>
+    <button class="btn ghost" id="importProjectBtn">Import Project</button>
+    <input id="importProjectFile" type="file" accept="application/json,.json" class="hidden">
+  </div>
+  <div class="storage-note">Projects are stored privately in this browser. Reference-image files are not stored and must be re-selected when a project is reopened. Export important projects as JSON for backup or transfer to another device.</div>
+  <div id="libraryList" class="library-list"></div>
+</section>
+
+<section class="section card">
+  <div class="section-title"><h2>1. Build your project</h2><span class="small">Start with the buyer, product and story</span></div>
+  <div class="grid">
+    <div class="field"><label for="product">Product name</label><input id="product" placeholder="e.g. Wireless Earbuds"></div>
+    <div class="field"><label for="link">Product link (reference only)</label><input id="link" placeholder="https://..."></div>
+    <div class="field"><label for="duration">Maximum scene length</label><select id="duration"><option value="10">10 seconds</option><option value="8">8 seconds</option><option value="6">6 seconds</option><option value="5">5 seconds</option></select></div>
+    <div class="field"><label for="format">Format</label><select id="format"><option>9:16 vertical</option><option>16:9 landscape</option><option>1:1 square</option></select></div>
+    <div class="field"><label for="audience">Target buyer / pain point</label><input id="audience" placeholder="e.g. Busy professionals taking calls in noisy places"></div>
+    <div class="field"><label for="benefit">Main benefit / CTA</label><input id="benefit" placeholder="e.g. Clear calls anywhere · Shop now"></div>
+    <div class="field full"><label for="details">Product / visual details</label><textarea id="details" placeholder="Product color, materials, packaging, character details, location, lighting, key feature..."></textarea></div>
+    <div class="field full">
+      <label for="story">Storyline, script or lyrics</label>
+      <textarea id="story" placeholder="Write your own story or generate a product-ad storyline below..."></textarea>
+      <div class="story-tools">
+        <div class="field"><label for="storyType">Winning ad structure</label><select id="storyType">
+          <option value="problem">Problem → Solution → Payoff</option>
+          <option value="hookdemo">Hook → Demo → Proof → CTA</option>
+          <option value="ugc">UGC / Personal Recommendation</option>
+          <option value="beforeafter">Before → After → Bridge</option>
+          <option value="lifestyle">Lifestyle Mini-Story</option>
+          <option value="objection">Objection → Proof → Conversion</option>
+          <option value="tutorial">Quick Tutorial / How-To</option>
+          <option value="unboxing">Discovery / Unboxing</option>
+        </select></div>
+        <button class="btn peach" id="generateStory">Generate Ad Storyline</button>
+      </div>
+      <div id="frameworkHint" class="framework-hint">Choose an ad structure, then generate a connected storyline using your product and buyer inputs.</div>
+    </div>
+    <div class="field full">
+      <label for="masterPrompt">Master prompt / continuity direction</label>
+      <textarea id="masterPrompt" placeholder="Click Generate Realistic Master Prompt to create this automatically from your inputs..."></textarea>
+      <div class="actions"><button class="btn peach" id="generateMaster">Generate Realistic Master Prompt</button></div>
+      <div id="masterStatus" class="master-status">Generated after you click the button. You can edit it before creating the storyboard.</div>
+    </div>
+  </div>
+  <div class="actions"><button class="btn primary" id="generate">Generate Storyboard</button><button class="btn ghost" id="reset">Reset</button></div>
+</section>
+
+<section class="section card">
+  <div class="section-title"><h2>2. Continuity references</h2><span class="small">Keep people, places and products consistent</span></div>
+  <div class="refs">
+    <div class="refbox"><b>Character reference</b><span class="small">Same person or recurring character.</span><input id="charRef" type="file" accept="image/*"><span id="charName" class="file-name">No file selected</span></div>
+    <div class="refbox"><b>Location reference</b><span class="small">Same café, room, setting or environment.</span><input id="locRef" type="file" accept="image/*"><span id="locName" class="file-name">No file selected</span></div>
+    <div class="refbox"><b>Product reference</b><span class="small">Use the actual product image when possible.</span><input id="prodRef" type="file" accept="image/*"><span id="prodName" class="file-name">No file selected</span></div>
+  </div>
+  <div class="notice">Your browser keeps these files local. When the selected AI workspace opens, add the listed images using that provider's reference or upload controls.</div>
+</section>
+
+<section class="section card">
+  <div class="section-title"><h2>3. Choose your AI video tool</h2><span class="small">The entire card updates when you switch providers</span></div>
+  <div class="provider-layout">
+    <div>
+      <div class="field"><label for="provider">Provider / AI Tool</label><select id="provider">
+        <option value="googleflow">Google Flow</option>
+        <option value="canva">Canva</option>
+        <option value="higgsfield">Higgsfield</option>
+        <option value="runway">Runway</option>
+      </select></div>
+      <div class="actions"><button class="btn primary" id="openProvider">Open selected AI Video</button></div>
+      <div id="status" class="status"></div>
+    </div>
+    <div class="provider-card">
+      <div class="eyebrow" style="background:rgba(246,215,199,.14);border-color:rgba(246,215,199,.24);color:var(--peach)">Selected provider</div>
+      <div id="providerTitle" class="provider-name">Google Flow</div>
+      <div id="providerHelp" class="provider-desc"></div><div id="providerAccess" class="access-line"></div>
+      <div class="provider-meta">
+        <div class="pc"><h4>Pros</h4><ul id="providerPros"></ul></div>
+        <div class="pc"><h4>Cons</h4><ul id="providerCons"></ul></div>
+      </div>
+      <div id="providerWorkflow" class="provider-workflow"></div><div id="providerWarning" class="provider-warning"></div>
+    </div>
+  </div>
+</section>
+
+<section class="section card">
+  <div class="section-title"><h2>4. Storyboard</h2><button class="btn ghost slim" id="copyAll">Copy All Prompts</button></div>
+  <div id="storyboard" class="empty">Your generated scenes will appear here.</div>
+</section>
+
+
+</main>
+<footer>
+  <div>PupScene Studio · Campo Digital Studio · © 2026</div>
+  <div class="footer-links"><button id="privacyOpen">Privacy Policy</button><button id="termsOpen">Terms & Disclaimer</button><button id="footerFeedbackOpen">Feedback</button></div>
+  <div class="domain-note">Official domain in preparation: pupscenestudio.site</div>
+</footer>
+
+<div class="modal-backdrop" id="feedbackModal" role="dialog" aria-modal="true" aria-labelledby="feedbackTitle">
+  <div class="modal"><div class="modal-head"><h2 id="feedbackTitle">Send Feedback</h2><button class="modal-close" data-close="feedbackModal" aria-label="Close feedback">×</button></div>
+  <div class="modal-body">
+    <div class="grid">
+      <div class="field"><label for="feedbackType">Feedback type</label><select id="feedbackType"><option>Bug / something is not working</option><option>Feature request</option><option>Ease of use / UX</option><option>AI prompt quality</option><option>Provider handoff</option><option>Other</option></select></div>
+      <div class="field"><label for="feedbackEmail">Your email (optional)</label><input id="feedbackEmail" type="email" placeholder="you@example.com"></div>
+      <div class="field full"><label for="feedbackMessage">What happened or what would you like improved?</label><textarea id="feedbackMessage" placeholder="Please include what you were trying to do, what you expected, and what happened instead."></textarea></div>
+    </div>
+    <div class="actions"><button class="btn primary" id="sendFeedbackEmail">Send via Email</button><button class="btn peach" id="copyFeedback">Copy Feedback</button></div>
+    <div class="feedback-note">This beta uses your device's email app rather than sending feedback through a PupScene server. The planned contact address is support@pupscenestudio.site; activate that mailbox before public paid launch.</div>
+  </div></div>
+</div>
+
+<div class="modal-backdrop" id="privacyModal" role="dialog" aria-modal="true" aria-labelledby="privacyTitle">
+  <div class="modal"><div class="modal-head"><h2 id="privacyTitle">Privacy Policy</h2><button class="modal-close" data-close="privacyModal" aria-label="Close privacy policy">×</button></div>
+  <div class="modal-body legal-copy"><span class="legal-date">Effective September 24, 2026</span>
+    <h3>1. What PupScene stores</h3><p>PupScene Studio stores your current draft, saved Project Library entries, and prompt edits in your browser's local storage so you can return to your work. These project records stay on the device and browser profile where you created them unless you export and move them yourself.</p>
+    <h3>2. Reference images</h3><p>Character, location, and product reference images selected in PupScene are used locally for previews and filenames. PupScene does not automatically upload those files to Campo Digital Studio. For browser-security reasons, reference files are not persisted in the Project Library and must be selected again after reopening a project.</p>
+    <h3>3. External AI providers</h3><p>When you choose Google Flow, Canva, Higgsfield, Runway, or another external service, PupScene copies or prepares content for that provider and opens its website. Anything you upload or submit there is handled under that provider's own privacy policy and terms. PupScene does not control their data practices.</p>
+    <h3>4. Feedback and contact</h3><p>The current Feedback feature prepares a message in your device's email application. PupScene does not receive your feedback until you choose to send that email. If you provide an email address in the feedback text, it is included only in the message you send.</p>
+    <h3>5. Cookies and analytics</h3><p>PupScene uses secure account sessions and stores account, plan, storyboard-usage, and billing-status records needed to provide paid access. Authentication cookies are HttpOnly and used only to keep you signed in. Advertising cookies are not required by the core app.</p>
+    <h3>6. Your choices</h3><p>You can delete individual saved projects from the Project Library, clear the current draft with Reset, or clear site storage through your browser settings. Clearing browser/site data can permanently remove locally saved projects, so export important projects first.</p>
+    <h3>7. Contact</h3><p>PupScene Studio is operated by Campo Digital Studio. Planned website: <strong>pupscenestudio.site</strong>. Planned support contact: <strong>support@pupscenestudio.site</strong>.</p>
+  </div></div>
+</div>
+
+<div class="modal-backdrop" id="termsModal" role="dialog" aria-modal="true" aria-labelledby="termsTitle">
+  <div class="modal"><div class="modal-head"><h2 id="termsTitle">Terms & Disclaimer</h2><button class="modal-close" data-close="termsModal" aria-label="Close terms and disclaimer">×</button></div>
+  <div class="modal-body legal-copy"><span class="legal-date">Effective September 24, 2026</span>
+    <h3>1. Creative planning tool</h3><p>PupScene Studio is a creative planning and prompt-preparation tool. It helps organize advertising ideas, storyboards, continuity instructions, and provider-ready prompts. It does not itself guarantee that an external AI provider will generate a particular result.</p>
+    <h3>2. External services</h3><p>Google Flow, Canva, Higgsfield, Runway, and other providers are independent third-party services. Their availability, prices, credits, features, content rules, generation limits, and output quality may change without notice. PupScene is not affiliated with or endorsed by those providers unless explicitly stated.</p>
+    <h3>3. User responsibility</h3><p>You are responsible for ensuring that you have the rights and permissions needed for product images, people, music, scripts, trademarks, logos, and other materials you use. You are also responsible for reviewing generated advertising for accuracy and compliance with the rules that apply to your business, marketplace, and jurisdiction.</p>
+    <h3>4. AI outputs</h3><p>AI-generated content can contain errors, distortions, inaccurate product details, inconsistent characters, or unsuitable claims. Review every output before publishing. PupScene prompts are guidance, not a guarantee of factual, legal, commercial, or platform compliance.</p>
+    <h3>5. Local projects and backups</h3><p>The Project Library in this build is stored locally in your browser. Browser cleanup, device loss, private browsing, or storage restrictions can remove that data. Export important projects as JSON backups. Campo Digital Studio is not responsible for local project loss where no cloud-backup service has been purchased or provided.</p>
+    <h3>6. Beta and product changes</h3><p>During beta and early paid releases, features may be corrected, renamed, added, or removed as PupScene is improved. Material changes to paid features should be communicated through the product or sales page.</p>
+    <h3>7. No professional advice</h3><p>PupScene provides creative and workflow assistance. It does not provide legal, financial, medical, or other regulated professional advice.</p>
+  </div></div>
+</div>
+
+<script>const $=id=>document.getElementById(id);
+let currentAccount=null;
+async function loadAccount(){try{const r=await fetch('/api/auth/me',{headers:{accept:'application/json'}});if(r.status===401){location.href='login.html?next='+encodeURIComponent(location.pathname.split('/').pop()||'index.html');return false}if(!r.ok)throw new Error('account');const j=await r.json();currentAccount=j.user;const usage=$('accountUsage');if(currentAccount.plan==='unlimited-monthly')usage.textContent='Unlimited · '+currentAccount.entitlementStatus;else if(currentAccount.plan==='3-storyboards'){usage.textContent=currentAccount.creditsRemaining+' storyboard'+(currentAccount.creditsRemaining===1?'':'s')+' left';usage.classList.toggle('usage-low',currentAccount.creditsRemaining<=1)}else usage.textContent='No active plan';if(currentAccount.isAdmin)$('adminLink').classList.remove('hidden');$('authGuard').classList.add('hidden');return true}catch(e){$('authGuard').innerHTML='<div class=\"auth-check\"><img src=\"assets/app-logo.webp\" alt=\"PupScene\"><h2>Account service unavailable</h2><p class=\"small\">PupScene could not verify your access. Check your connection and try again.</p><button class=\"btn primary\" onclick=\"location.reload()\">Retry</button></div>';return false}}
+async function consumeStoryboardCredit(){try{const r=await fetch('/api/generation/consume',{method:'POST',headers:{'content-type':'application/json'}});const j=await r.json();if(!r.ok){if(r.status===401){location.href='login.html?next=index.html';return false}const go=j.checkoutUrl||'checkout.html';showStatus((j.error==='no_credits'?'You have no storyboard credits remaining.':j.error==='subscription_expired'?'Your subscription needs renewal.':'An active PupScene plan is required.')+' Opening Checkout…');setTimeout(()=>location.href=go,900);return false}await loadAccount();return true}catch(e){showStatus('Could not verify your storyboard allowance. Please check your connection.');return false}}
+const STORAGE_KEY='pupscene-project-v10';
+const LEGACY_STORAGE_KEY='pupscene-project-v9';
+const LIBRARY_KEY='pupscene-library-v10';
+const INTRO_KEY='pupscene-intro-seen-v9';
+let scenes=[];
+let promptEdits={};
+let refPreviewUrls={};
+const providers={
+  googleflow:{name:'Google Flow',url:'https://labs.google/fx/tools/flow',access:'Free daily Flow credits are available for eligible Google accounts; limits vary by region/account.',desc:'A filmmaking-oriented Google workspace for building scenes with text prompts and visual ingredients or frames.',pros:['Strong cinematic scene workflow','Supports visual ingredients / reference-led creation','Good fit for shot-by-shot storytelling'],cons:['Availability and generation limits can depend on account/region','Project settings may need to be recreated between scenes','Continuity still depends on disciplined references and prompting'],workflow:'Open Flow, create or open a project, choose the appropriate video mode, paste the PupScene prompt, add character/location/product references as ingredients or frames when supported, confirm aspect ratio and duration, then generate.',maxDuration:10,formats:['9:16 vertical','16:9 landscape','1:1 square']},
+  canva:{name:'Canva',url:'https://www.canva.com/features/ai-video-generator/',access:'Native Create a Video Clip access can depend on Canva plan. For that workflow, use up to 8 seconds and 16:9.',desc:'An accessible all-in-one design and video workspace for generating clips and immediately finishing social edits.',pros:['Beginner-friendly interface','Generation and editing in one ecosystem','Easy captions, layout and brand finishing'],cons:['Reference-image workflow varies by Canva feature/app','Fine cinematic controls are lighter than specialist tools','Some AI features depend on plan or usage limits'],workflow:'Open Canva AI Video. For native Create a Video Clip, paste the prompt and use 16:9 at up to 8 seconds. If you need image references, choose a Canva image-to-video or Magic Media workflow that supports them.',maxDuration:8,formats:['16:9 landscape']},
+  higgsfield:{name:'Higgsfield',url:'https://higgsfield.ai/ai-video',access:'Free access exists, but advanced models and higher-volume generation may require credits or a paid plan.',desc:'A specialist AI video workspace with multiple models, references, first/last-frame control and camera tools.',pros:['Multiple leading video models','Strong camera and motion controls','Reference and first/last-frame workflows support continuity'],cons:['Advanced generation can require credits','More controls add a learning curve','Capabilities vary by selected model'],workflow:'Open Higgsfield AI Video, choose a model that supports your references, paste the PupScene prompt, upload references, set aspect ratio and duration, review motion/camera settings, then generate.',maxDuration:10,formats:['9:16 vertical','16:9 landscape','1:1 square']},
+  runway:{name:'Runway',url:'https://app.runwayml.com/',access:'Runway Scene Builder requires credits; available models and generation limits depend on the workspace plan.',desc:'A cinematic generative-video workspace where Scene Builder frames a scene first, optionally with references, then animates it.',pros:['Scene Builder separates framing from animation','Reference images guide characters, scene and style','Strong cinematic motion direction'],cons:['Scene Builder uses credits','Two-stage frame-then-animate adds steps','Reference options depend on selected model/tool'],workflow:'Open Runway, go to Apps > Video > Scene Builder, paste the scene description, add References, generate/refine the frame, then add motion direction and generate the video.',maxDuration:10,formats:['9:16 vertical','16:9 landscape','1:1 square']}
+};
+const storyHints={problem:'Open with a recognizable pain point, make the friction visible, introduce the product naturally, then show a satisfying payoff.',hookdemo:'Start with a scroll-stopping result or claim, demonstrate the key feature quickly, show believable proof, then close with the CTA.',ugc:'Use a relatable first-person discovery: honest frustration, product try, authentic reaction, simple benefit and recommendation.',beforeafter:'Show the frustrating before state, make the product the bridge, then contrast it with a noticeably better after state.',lifestyle:'Put the buyer in an aspirational but believable daily-life moment where the product quietly makes the experience better.',objection:'State the buyer\'s likely hesitation, demonstrate the feature that answers it, then resolve the objection with a confident CTA.',tutorial:'Teach one quick task in a visual sequence where each step proves why the product is useful.',unboxing:'Build curiosity through discovery: reveal packaging, product details, first interaction, feature moment and first-impression payoff.'};
+function esc(s){return String(s).replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))}
+function projectData(){return{product:$('product').value.trim()||'the product',link:$('link').value.trim(),duration:$('duration').value,format:$('format').value,audience:$('audience').value.trim(),benefit:$('benefit').value.trim(),details:$('details').value.trim(),story:$('story').value.trim(),userMaster:$('masterPrompt').value.trim(),storyType:$('storyType').value,provider:$('provider').value}}
+function selectedRefs(){const r=[];if($('charRef').files[0])r.push('Character: '+$('charRef').files[0].name);if($('locRef').files[0])r.push('Location: '+$('locRef').files[0].name);if($('prodRef').files[0])r.push('Product: '+$('prodRef').files[0].name);return r}
+async function cp(t){try{await navigator.clipboard.writeText(t);return true}catch(e){prompt('Copy this text:',t);return false}}
+function showStatus(msg){$('status').textContent=msg;$('status').classList.add('show');setTimeout(()=>$('status').classList.remove('show'),6000)}
+function rawProjectData(){return{product:$('product').value.trim(),link:$('link').value.trim(),duration:$('duration').value,format:$('format').value,audience:$('audience').value.trim(),benefit:$('benefit').value.trim(),details:$('details').value.trim(),story:$('story').value.trim(),userMaster:$('masterPrompt').value.trim(),storyType:$('storyType').value,provider:$('provider').value}}
+function currentSnapshot(name=''){return{version:10,name:name||$('product').value.trim()||'Untitled Project',d:rawProjectData(),scenes:JSON.parse(JSON.stringify(scenes)),promptEdits:{...promptEdits},refNames:selectedRefs(),ts:Date.now()}}
+function saveProject(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(currentSnapshot('Current Draft')))}catch(e){}}
+function applySnapshot(s,notice=true){const d=s?.d||{};['product','link','audience','benefit','details','story'].forEach(k=>{if(d[k]!=null)$(k).value=d[k]});if(d.userMaster!=null)$('masterPrompt').value=d.userMaster;else if(d.masterPrompt!=null)$('masterPrompt').value=d.masterPrompt;if(d.duration)$('duration').value=d.duration;if(d.format)$('format').value=d.format;if(d.storyType)$('storyType').value=d.storyType;if(d.provider&&providers[d.provider])$('provider').value=d.provider;scenes=Array.isArray(s?.scenes)?JSON.parse(JSON.stringify(s.scenes)):[];promptEdits=s?.promptEdits&&typeof s.promptEdits==='object'?{...s.promptEdits}:{};['charRef','locRef','prodRef'].forEach(x=>$(x).value='');['charName','locName','prodName'].forEach(x=>$(x).textContent='No file selected');['charPreview','locPreview','prodPreview'].forEach(id=>{$(id).src='';$(id).classList.remove('show')});$('frameworkHint').textContent=storyHints[$('storyType').value];updateProvider();render();saveProject();if(notice)showStatus('Project loaded. Reference images must be re-selected for browser privacy.')}
+function restoreProject(){try{let raw=localStorage.getItem(STORAGE_KEY);if(!raw){raw=localStorage.getItem(LEGACY_STORAGE_KEY);if(raw)localStorage.setItem(STORAGE_KEY,raw)}if(!raw)return;applySnapshot(JSON.parse(raw),false);showStatus('Previous project restored. Reference images must be re-selected for browser privacy.')}catch(e){}}
+function getLibrary(){try{const v=JSON.parse(localStorage.getItem(LIBRARY_KEY)||'[]');return Array.isArray(v)?v:[]}catch(e){return[]}}
+function setLibrary(items){try{localStorage.setItem(LIBRARY_KEY,JSON.stringify(items));renderLibrary()}catch(e){alert('This browser could not save the Project Library. Storage may be full or disabled.')}}
+function uid(){try{return crypto.randomUUID()}catch(e){return 'p_'+Date.now()+'_'+Math.random().toString(36).slice(2)}}
+function saveToLibrary(){const existing=getLibrary();const def=$('product').value.trim()||'Untitled Project';const name=prompt('Project name:',def);if(name===null)return;const clean=name.trim()||def;const item={...currentSnapshot(clean),id:uid(),savedAt:Date.now()};existing.unshift(item);setLibrary(existing);showStatus(`Saved “${clean}” to Project Library.`)}
+function loadLibraryProject(id){const item=getLibrary().find(x=>x.id===id);if(!item)return;const hasWork=$('product').value.trim()||$('story').value.trim()||scenes.length;if(hasWork&&!confirm(`Load “${item.name}”? Your current draft is autosaved, but save it to the library first if you want a permanent copy.`))return;applySnapshot(item,true);document.querySelector('main').scrollIntoView({behavior:'smooth',block:'start'})}
+function renameLibraryProject(id){const items=getLibrary(),item=items.find(x=>x.id===id);if(!item)return;const name=prompt('Rename project:',item.name||'Untitled Project');if(name===null)return;item.name=name.trim()||'Untitled Project';item.savedAt=Date.now();setLibrary(items)}
+function deleteLibraryProject(id){const items=getLibrary(),item=items.find(x=>x.id===id);if(!item)return;if(!confirm(`Delete “${item.name}” from this browser? Export it first if you may need it later.`))return;setLibrary(items.filter(x=>x.id!==id))}
+function exportSnapshot(item){const blob=new Blob([JSON.stringify(item,null,2)],{type:'application/json'});const a=document.createElement('a');const safe=(item.name||'PupScene-Project').replace(/[^a-z0-9_-]+/gi,'-').replace(/^-|-$/g,'');a.href=URL.createObjectURL(blob);a.download=`${safe||'PupScene-Project'}.pupscene.json`;document.body.appendChild(a);a.click();const u=a.href;a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000)}
+function exportLibraryProject(id){const item=getLibrary().find(x=>x.id===id);if(item)exportSnapshot(item)}
+function renderLibrary(){const list=$('libraryList');if(!list)return;const items=getLibrary();if(!items.length){list.innerHTML='<div class="empty-library">No saved projects yet. Build a project, then choose <b>Save Current Project</b>. Your current draft still autosaves separately.</div>';return}list.innerHTML=items.map(item=>`<article class="project-item"><h3>${esc(item.name||'Untitled Project')}</h3><div class="project-meta">${item.d?.provider?esc(providers[item.d.provider]?.name||item.d.provider)+' · ':''}${item.scenes?.length||0} scenes · Saved ${new Date(item.savedAt||item.ts||Date.now()).toLocaleString()}</div><div class="project-actions"><button class="btn primary slim" onclick="loadLibraryProject('${item.id}')">Load</button><button class="btn ghost slim" onclick="renameLibraryProject('${item.id}')">Rename</button><button class="btn ghost slim" onclick="exportLibraryProject('${item.id}')">Export</button><button class="btn ghost slim" onclick="deleteLibraryProject('${item.id}')">Delete</button></div></article>`).join('')}
+function clearCurrentProject(ask=true){const has=['product','link','audience','benefit','story','details','masterPrompt'].some(id=>$(id).value.trim())||scenes.length;if(ask&&has&&!confirm('Start a new PupScene project? The current draft will be cleared. Save it to the Project Library first if you want to keep it.'))return false;['product','link','audience','benefit','story','details','masterPrompt'].forEach(x=>$(x).value='');['charRef','locRef','prodRef'].forEach(x=>$(x).value='');['charName','locName','prodName'].forEach(x=>$(x).textContent='No file selected');['charPreview','locPreview','prodPreview'].forEach(id=>{$(id).src='';$(id).classList.remove('show')});scenes=[];promptEdits={};localStorage.removeItem(STORAGE_KEY);render();return true}
+window.loadLibraryProject=loadLibraryProject;window.renameLibraryProject=renameLibraryProject;window.deleteLibraryProject=deleteLibraryProject;window.exportLibraryProject=exportLibraryProject;
+function generateAdStoryline(){const d=projectData(),type=$('storyType').value,buyer=d.audience||'the target buyer',benefit=d.benefit||'the product\'s key benefit';const M={problem:`Open on ${buyer} experiencing a specific, relatable frustration that ${d.product} is designed to solve. Make the problem visually obvious in a normal real-life setting. Introduce ${d.product} naturally at the moment the problem becomes inconvenient. Show the product being used and make its key feature easy to understand without explanation. End with the buyer experiencing ${benefit}, showing a small believable emotional payoff and a clean product moment with a direct CTA.`,hookdemo:`Start with a visually strong hook that immediately shows the desired outcome from ${d.product}. Cut into a clear product demonstration focused on the most important feature for ${buyer}. Show a believable proof moment where the result can be seen in action. Keep the product central, avoid exaggerated reactions, and finish with ${benefit} plus a concise CTA.`,ugc:`Begin like an authentic personal recommendation from someone who matches ${buyer}. They briefly show the problem they were dealing with, explain what made them try ${d.product}, then use it naturally on camera. Focus on one concrete benefit instead of a long feature list. End with an understated positive reaction, ${benefit}, and a recommendation-style CTA.`,beforeafter:`Show a clear BEFORE moment where ${buyer} deals with the pain point. Introduce ${d.product} as the bridge between the old experience and a better one. Demonstrate the exact action that creates the change. Then show an AFTER moment with visibly improved ease, comfort or result. Finish by reinforcing ${benefit} and the CTA.`,lifestyle:`Follow ${buyer} through one believable lifestyle moment where ${d.product} belongs naturally. Establish the setting and desire, introduce a small friction point, then let the product quietly improve the experience. Keep the acting subtle and aspirational rather than salesy. Finish with a satisfying lifestyle payoff, a short product hero moment and ${benefit}.`,objection:`Open with the most likely hesitation ${buyer} might have about buying or using ${d.product}. Show the product in a real situation that directly answers that concern. Demonstrate the feature or result that resolves the objection. Let the buyer visibly gain confidence, then close with ${benefit} and a conversion-focused CTA.`,tutorial:`Teach ${buyer} how to get a useful result with ${d.product} in three simple visual steps. Step 1 introduces the setup. Step 2 shows the key product action or feature. Step 3 reveals the completed result. Keep each step visually obvious and easy to understand without long text. Finish with ${benefit} and a simple CTA.`,unboxing:`Begin with ${buyer} discovering or receiving ${d.product}. Show the packaging reveal, then a close-up of the product and its most appealing physical detail. Move into the first real use, highlight the key feature through action, and end on a genuine first-impression reaction, ${benefit}, and a clean CTA.`};$('story').value=M[type];$('frameworkHint').textContent=storyHints[type];scenes=[];promptEdits={};render();saveProject()}
+function generateRealisticMasterPrompt(){const d=projectData(),refs=selectedRefs(),refText=refs.length?refs.join(' | '):'No reference files selected yet. Add character, location and product images when available.';const buyer=d.audience||'the intended buyer',benefit=d.benefit||'the primary product benefit',details=d.details||'preserve the real product design, materials, proportions and color';const prompt=[`Create a highly realistic, continuity-safe multi-scene product advertisement for ${d.product}.`,`Audience: ${buyer}.`,`Primary benefit and conversion goal: ${benefit}.`,`Product and visual fidelity: ${details}.`,`Output format: ${d.format}. Maximum length per scene: ${d.duration} seconds.`,`Continuity lock: use the same character identity, facial structure, age appearance, hairstyle, skin tone, wardrobe, body proportions, location architecture, furniture placement, time of day, lighting direction, props, product model, product color, dimensions and surface finish across every scene.`,`Reference plan: ${refText}`,`Photorealism: natural skin texture, realistic eyes and hair, physically plausible materials, accurate reflections, believable shadows, correct anatomy, correct hands and fingers, realistic product grip and contact, no floating objects, no morphing, no extra limbs, no identity drift and no product redesign.`,`Camera direction: realistic lens behavior, gentle stabilized movement only when motivated, clean focus transitions, restrained cinematic depth of field, and continuity-aware screen direction between scenes.`,`Performance direction: understated believable acting. Avoid exaggerated reactions unless the selected storyline is UGC.`,`Audio and text: do not generate unrequested on-screen text, subtitles, watermarks, logos or UI overlays. If native audio is generated, keep ambience and speech natural and synchronized.`,`Every scene must feel like the next shot from the same real production, not a separately generated clip.`].join(' ');$('masterPrompt').value=prompt;$('masterStatus').textContent='Provider-neutral master prompt generated. Provider-specific instructions are added only to each scene prompt.';if(scenes.length)render();saveProject()}
+function masterPrompt(){const d=projectData(),refs=selectedRefs();if(d.userMaster)return d.userMaster;const refLine=refs.length?`Reference images to add: ${refs.join(' | ')}.`:'Reference images to add: character, location and product references if available.';return[`Create a cohesive, photorealistic multi-scene commercial for ${d.product}.`,d.audience?`Target buyer: ${d.audience}.`:'',d.benefit?`Primary benefit / CTA: ${d.benefit}.`:'',`Maximum length per scene: ${d.duration} seconds.`,`Format: ${d.format}.`,'Continuity rule: keep the same character identity, face, hairstyle, wardrobe, body proportions, location architecture, lighting direction, props, product design, product color, product scale and overall visual language across every scene.',refLine,d.details?`Product and visual details: ${d.details}.`:'','Use realistic anatomy, natural believable motion, coherent hands and product interaction, physically plausible lighting, clean lifestyle-commercial cinematography, and no unrequested captions, text, watermarks or logos.'].filter(Boolean).join(' ')}
+function promptKey(sceneN,providerId=$('provider').value){return providerId+':'+sceneN}
+function providerPrompt(scene){const d=projectData(),p=providers[$('provider').value],refs=selectedRefs(),refText=refs.length?refs.join(' | '):'No local reference files selected yet. Add character, location and product references if available.';return`PROVIDER:\n${p.name}\n\nPROVIDER WORKFLOW:\n${p.workflow}\n\nMASTER PROMPT:\n${masterPrompt()}\n\nSCENE ${scene.n} PURPOSE:\n${scene.role}\n\nSCENE ACTION / STORY BEAT:\n${scene.action}\n\nMAXIMUM LENGTH:\n${d.duration} seconds\n\nFORMAT:\n${d.format}\n\nCONTINUITY FOR THIS SCENE:\nMatch the same character, location, product, wardrobe, lighting direction, props and visual tone established by the references and previous scene. Do not redesign the product or person.\n\nREFERENCE IMAGES TO ADD IN ${p.name.toUpperCase()}:\n${refText}\n\nCOPY-READY ${p.name.toUpperCase()} VIDEO PROMPT:\nUsing the master prompt and continuity references above, create Scene ${scene.n} for ${d.product}. ${scene.action} Keep the action readable within ${d.duration} seconds in ${d.format}. ${d.details?`Product and visual details: ${d.details}. `:''}Use a controlled single-scene progression with realistic motion and a natural visual bridge from the previous scene to the next scene. Preserve identity, environment and product consistency exactly.`}
+function splitIntoBeats(text){const paras=text.split(/\n\s*\n|\r?\n/).map(x=>x.trim()).filter(Boolean);let beats=[];for(const para of paras){let sent=para.split(/(?<=[.!?])\s+/).map(s=>s.trim()).filter(Boolean);if(!sent.length)sent=[para];for(const s of sent){if(s.length>220){const parts=s.split(/,|;|\bthen\b|\band\b/gi).map(x=>x.trim()).filter(x=>x.length>18);beats.push(...(parts.length>1?parts:[s]))}else beats.push(s)}}return beats.filter(Boolean)}
+function sceneComplexity(text){const actions=(text.match(/\b(and|then|while|after|before|reaches|opens|takes|inserts|walks|turns|shows|uses|looks|moves|speaks|smiles|nods)\b/gi)||[]).length;return text.length/90+actions*.45}
+async function buildScenes(){const story=$('story').value.trim();if(!story){alert('Add a storyline, script or lyrics first.');return}if(!(await consumeStoryboardCredit()))return;const d=projectData();let beats=splitIntoBeats(story);if(!beats.length)beats=[story];const maxComplexity=Math.max(1.4,Number(d.duration)/3);let packed=[],current='';for(const beat of beats){const candidate=current?(current+' '+beat):beat;if(current&&sceneComplexity(candidate)>maxComplexity){packed.push(current);current=beat}else current=candidate}if(current)packed.push(current);if(packed.length<3){while(packed.length<3)packed.push(['Introduce the setting and the main problem.','Show the product being used as the solution.','Show the result, emotional payoff and final product moment.'][packed.length])}if(packed.length>6){const merged=[];for(let i=0;i<6;i++){const start=Math.floor(i*packed.length/6),end=Math.floor((i+1)*packed.length/6);merged.push(packed.slice(start,end).join(' '))}packed=merged}scenes=packed.map((action,i)=>({n:i+1,role:i===0?'Setup / Problem':i===packed.length-1?'Payoff / CTA':'Progression / Solution',action}));promptEdits={};render();saveProject()}
+function render(){const box=$('storyboard');if(!scenes.length){box.className='empty';box.textContent='Your generated scenes will appear here.';return}const refs=selectedRefs(),p=providers[$('provider').value],d=projectData();box.className='';box.innerHTML=scenes.map(s=>{const key=promptKey(s.n);const value=promptEdits[key]??providerPrompt(s);return`<article class="scene"><div class="scenehead"><h3>Scene ${s.n}</h3><span class="pill">${esc(s.role)}</span></div><div class="scenegrid"><div class="meta"><b>Story beat</b><br>${esc(s.action)}<br><br><b>Provider</b><br>${esc(p.name)}<div class="provider-rule">${esc(p.workflow)}</div><br><b>Continuity references</b><div class="refchips">${refs.length?refs.map(r=>`<span class="chip">${esc(r)}</span>`).join(''):'<span class="chip">No files selected</span>'}</div><br><b>Maximum length</b><br>${d.duration} seconds<br><br><b>Format</b><br>${esc(d.format)}</div><div><textarea id="prompt${s.n}" data-scene="${s.n}">${esc(value)}</textarea><div class="dirty-note">Edits are saved automatically for this provider.</div><div class="actions"><button class="btn peach" onclick="copyScene(${s.n})">Copy ${esc(p.name)} Prompt</button><button class="btn primary" onclick="sendScene(${s.n})">Copy + Open ${esc(p.name)}</button></div></div></div></article>`}).join('');box.querySelectorAll('textarea[data-scene]').forEach(t=>t.addEventListener('input',()=>{promptEdits[promptKey(Number(t.dataset.scene))]=t.value;saveProject()}))}
+function enforceProviderCapabilities(show=true){const p=providers[$('provider').value];let changed=[];if(Number($('duration').value)>p.maxDuration){$('duration').value=String(p.maxDuration);changed.push(`duration adjusted to ${p.maxDuration} seconds`)}if(!p.formats.includes($('format').value)){$('format').value=p.formats[0];changed.push(`format adjusted to ${p.formats[0]}`)}const warn=$('providerWarning');if(p.name==='Canva'){warn.textContent='Canva native Create a Video Clip is constrained here to 8 seconds and 16:9. Choose another Canva image-to-video workflow if you need references or different output settings.';warn.classList.add('show')}else warn.classList.remove('show');if(changed.length&&show)showStatus(`${p.name}: ${changed.join(', ')}.`)}
+function updateProvider(){const p=providers[$('provider').value];enforceProviderCapabilities();$('providerTitle').textContent=p.name;$('providerHelp').textContent=p.desc;$('providerAccess').textContent='Access: '+p.access;$('providerWorkflow').textContent=p.workflow;$('providerPros').innerHTML=p.pros.map(x=>`<li>${esc(x)}</li>`).join('');$('providerCons').innerHTML=p.cons.map(x=>`<li>${esc(x)}</li>`).join('');$('openProvider').textContent='Open '+p.name+' AI Video';if(scenes.length)render();saveProject()}
+function openProvider(){window.open(providers[$('provider').value].url,'_blank','noopener')}
+window.copyScene=async n=>{const el=$('prompt'+n);await cp(el?el.value:'');showStatus(`Scene ${n} prompt copied.`)};
+window.sendScene=async n=>{const p=providers[$('provider').value];const tab=window.open('about:blank','_blank');const el=$('prompt'+n);await cp(el?el.value:'');if(tab)tab.location=p.url;else window.location.href=p.url;showStatus(`Scene ${n} prompt copied. Opening ${p.name}. Add continuity references if available.`)};
+$('generate').onclick=buildScenes;$('generateStory').onclick=generateAdStoryline;$('generateMaster').onclick=generateRealisticMasterPrompt;$('provider').onchange=updateProvider;$('openProvider').onclick=openProvider;
+$('copyAll').onclick=async()=>{if(!scenes.length)return;const p=providers[$('provider').value];const text=scenes.map(s=>{const el=$('prompt'+s.n);return`===== SCENE ${s.n} / ${p.name.toUpperCase()} =====\n${el?el.value:(promptEdits[promptKey(s.n)]??providerPrompt(s))}`}).join('\n\n');await cp(text);showStatus(`All ${p.name} prompts copied.`)};
+$('reset').onclick=()=>clearCurrentProject(true);
+$('storyType').onchange=()=>{$('frameworkHint').textContent=storyHints[$('storyType').value];saveProject()};
+['product','link','audience','benefit','story','details','masterPrompt','duration','format'].forEach(id=>$(id).addEventListener('input',saveProject));
+[['charRef','charName','charPreview'],['locRef','locName','locPreview'],['prodRef','prodName','prodPreview']].forEach(([input,name,preview])=>$(input).onchange=()=>{const f=$(input).files[0];$(name).textContent=f?.name||'No file selected';if(refPreviewUrls[input])URL.revokeObjectURL(refPreviewUrls[input]);if(f){refPreviewUrls[input]=URL.createObjectURL(f);$(preview).src=refPreviewUrls[input];$(preview).classList.add('show')}else{$(preview).src='';$(preview).classList.remove('show')}if(scenes.length)render();saveProject()});
+const splash=$('splash'),pup=$('splashPup');
+function closeSplash(){if(!splash||splash.classList.contains('exit'))return;localStorage.setItem(INTRO_KEY,'1');splash.classList.add('exit');document.body.classList.remove('intro-active');setTimeout(()=>splash.remove(),600)}
+$('skipIntro').addEventListener('click',closeSplash);
+if(localStorage.getItem(INTRO_KEY)==='1')setTimeout(closeSplash,150);else setTimeout(closeSplash,5000);
+pup.setAttribute('role','button');pup.setAttribute('tabindex','0');pup.setAttribute('aria-label','PupScene puppy mascot. Activate to hear a bark.');
+function boop(){bark();pup.classList.remove('boop');void pup.offsetWidth;pup.classList.add('boop')}
+pup.addEventListener('click',boop);pup.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();boop()}});
+splash.addEventListener('pointermove',e=>{if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;const r=splash.getBoundingClientRect(),x=(e.clientX-r.width/2)/r.width,y=(e.clientY-r.height/2)/r.height;pup.style.transform=`translate(${x*16}px,${y*10}px) rotate(${x*3}deg)`});
+splash.addEventListener('pointerleave',()=>{pup.style.transform=''})
+let audioCtx;function bark(){try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();const now=audioCtx.currentTime,master=audioCtx.createGain();master.gain.setValueAtTime(.0001,now);master.gain.exponentialRampToValueAtTime(.22,now+.01);master.gain.exponentialRampToValueAtTime(.0001,now+.24);master.connect(audioCtx.destination);[0,.11].forEach((delay,i)=>{const osc=audioCtx.createOscillator(),g=audioCtx.createGain();osc.type='sawtooth';osc.frequency.setValueAtTime(i?240:285,now+delay);osc.frequency.exponentialRampToValueAtTime(i?150:175,now+delay+.11);g.gain.setValueAtTime(.0001,now+delay);g.gain.exponentialRampToValueAtTime(i?.24:.34,now+delay+.008);g.gain.exponentialRampToValueAtTime(.0001,now+delay+.12);osc.connect(g);g.connect(master);osc.start(now+delay);osc.stop(now+delay+.13)})}catch(e){}}
+const heroPup=$('heroPup'),hero=document.querySelector('.hero');let dx=0,dy=0,dragging=false,startX=0,startY=0,moved=false;
+function constrain(x,y){const hr=hero.getBoundingClientRect(),pr=heroPup.getBoundingClientRect();const baseLeft=pr.left-dx,baseTop=pr.top-dy;const minX=hr.left-baseLeft,maxX=hr.right-(baseLeft+pr.width),minY=hr.top-baseTop,maxY=hr.bottom-(baseTop+pr.height);return[Math.min(maxX,Math.max(minX,x)),Math.min(maxY,Math.max(minY,y))]}
+function applyPup(){heroPup.style.transform=`translate(${dx}px,${dy}px)`}
+function resetPup(){dx=0;dy=0;applyPup()}
+$('resetPup').onclick=resetPup;
+heroPup.addEventListener('pointerdown',e=>{dragging=true;moved=false;startX=e.clientX-dx;startY=e.clientY-dy;heroPup.classList.add('dragging');heroPup.setPointerCapture?.(e.pointerId)});
+heroPup.addEventListener('pointermove',e=>{if(!dragging)return;let nx=e.clientX-startX,ny=e.clientY-startY;[nx,ny]=constrain(nx,ny);if(Math.abs(nx-dx)+Math.abs(ny-dy)>4)moved=true;dx=nx;dy=ny;applyPup()});
+function endDrag(){if(!dragging)return;dragging=false;heroPup.classList.remove('dragging');if(!moved)bark()}
+heroPup.addEventListener('pointerup',endDrag);heroPup.addEventListener('pointercancel',endDrag);heroPup.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();bark()}if(e.key==='Escape')resetPup()});
+// Project Library actions
+$('saveToLibrary').onclick=saveToLibrary;
+$('newProject').onclick=()=>{if(clearCurrentProject(true)){window.scrollTo({top:0,behavior:'smooth'});showStatus('New project started.')}};
+$('libraryJump').onclick=()=>$('projectLibrary').scrollIntoView({behavior:'smooth',block:'start'});
+$('importProjectBtn').onclick=()=>$('importProjectFile').click();
+$('importProjectFile').onchange=async()=>{const f=$('importProjectFile').files[0];if(!f)return;try{const obj=JSON.parse(await f.text());if(!obj||!obj.d||!Array.isArray(obj.scenes))throw new Error('Invalid PupScene project');const item={...obj,id:uid(),name:obj.name||f.name.replace(/\.pupscene\.json$|\.json$/i,'')||'Imported Project',savedAt:Date.now(),version:10};const items=getLibrary();items.unshift(item);setLibrary(items);showStatus(`Imported “${item.name}” into the Project Library.`)}catch(e){alert('That file is not a valid PupScene project export.')}finally{$('importProjectFile').value=''}};
+renderLibrary();
+function openModal(id){const m=$(id);if(!m)return;m.classList.add('show');document.body.style.overflow='hidden';const focusable=m.querySelector('button,input,select,textarea');setTimeout(()=>focusable?.focus(),30)}
+function closeModal(id){const m=$(id);if(!m)return;m.classList.remove('show');if(!document.querySelector('.modal-backdrop.show'))document.body.style.overflow=''}
+$('feedbackOpen').onclick=()=>openModal('feedbackModal');$('footerFeedbackOpen').onclick=()=>openModal('feedbackModal');$('privacyOpen').onclick=()=>openModal('privacyModal');$('termsOpen').onclick=()=>openModal('termsModal');
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>closeModal(b.dataset.close));document.querySelectorAll('.modal-backdrop').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)closeModal(m.id)}));document.addEventListener('keydown',e=>{if(e.key==='Escape'){const m=document.querySelector('.modal-backdrop.show');if(m)closeModal(m.id)}});
+function feedbackText(){const type=$('feedbackType').value,msg=$('feedbackMessage').value.trim(),email=$('feedbackEmail').value.trim();return `PupScene Studio Feedback\n\nType: ${type}\nContact email: ${email||'Not provided'}\nApp version: v11.1\nPage: ${location.href}\nBrowser: ${navigator.userAgent}\n\nFeedback:\n${msg||'(No message entered)'}`}
+$('copyFeedback').onclick=async()=>{await cp(feedbackText());showStatus('Feedback copied. Thank you.')};
+$('sendFeedbackEmail').onclick=()=>{if(!$('feedbackMessage').value.trim()){alert('Please add your feedback message first.');$('feedbackMessage').focus();return}const subject=encodeURIComponent('PupScene Studio Feedback — '+$('feedbackType').value),body=encodeURIComponent(feedbackText());location.href=`mailto:support@pupscenestudio.site?subject=${subject}&body=${body}`};
+let deferredInstallPrompt=null;const installBtn=$('installBtn'),installHelp=$('installHelp');const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);const isStandalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+function setInstallReady(ready){if(!installBtn)return;installBtn.classList.toggle('show',!!ready);installBtn.disabled=!ready}
+if(isIOS&&!isStandalone){installHelp.textContent='iPhone/iPad: in Safari, tap Share, then Add to Home Screen to install PupScene Studio.';installHelp.classList.add('show')}
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstallPrompt=e;setInstallReady(true)});
+installBtn.addEventListener('click',async()=>{if(!deferredInstallPrompt){installHelp.textContent='Install prompt is not available in this browser yet. Use the browser menu and choose Install app / Add to Home Screen.';installHelp.classList.add('show');return}deferredInstallPrompt.prompt();try{await deferredInstallPrompt.userChoice}catch(e){}deferredInstallPrompt=null;setInstallReady(false)});
+window.addEventListener('appinstalled',()=>{deferredInstallPrompt=null;setInstallReady(false);installHelp.classList.remove('show');showStatus('PupScene Studio installed successfully.')});
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('/service-worker.js').catch(err=>console.warn('Service worker registration failed',err)))}
+restoreProject();updateProvider();$('frameworkHint').textContent=storyHints[$('storyType').value];
+loadAccount();
+</script>
+</body>
+</html>
