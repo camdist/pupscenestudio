@@ -1,1 +1,1 @@
-
+import {json,requireUser} from '../../lib/auth.js';export async function onRequestGet(ctx){const r=await requireUser(ctx);if(r.response)return r.response;const rows=await ctx.env.DB.prepare('SELECT id,plan,provider,provider_payment_id,amount_usd,currency,amount_paid,status,created_at FROM payments WHERE user_id=? ORDER BY created_at DESC LIMIT 50').bind(r.session.user_id).all();return json({ok:true,payments:rows.results||[]})}
