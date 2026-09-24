@@ -1,0 +1,16 @@
+{
+  "name": "pupscene-studio-cloudflare",
+  "version": "12.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "cf-typegen": "wrangler types",
+    "db:schema:local": "wrangler d1 execute pupscene-db --local --file=./cloudflare/schema-v12.sql",
+    "db:schema:remote": "wrangler d1 execute pupscene-db --remote --file=./cloudflare/schema-v12.sql"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}
