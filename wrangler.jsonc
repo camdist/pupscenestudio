@@ -5,7 +5,7 @@
   "compatibility_date": "2026-09-24",
   "assets": {
     "directory": "./public",
-    "binding": "ASSETS",
+    "binding": "DB",
     "run_worker_first": ["/api/*"]
   },
   "vars": {
@@ -18,7 +18,7 @@
   //   {
   //     "binding": "DB",
   //     "database_name": "pupscene-db",
-  //     "database_id": "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+  //     "database_id": "9cfc1784-dd24-4f08-be9a-25fd8b319cc6"
   //   }
   // ]
 }
