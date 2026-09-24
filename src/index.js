@@ -8,6 +8,8 @@ import { onRequestGet as adminBillingGet, onRequestPost as adminBillingPost } fr
 import { onRequestGet as accountBillingGet } from './routes/account/billing.js';
 import { onRequestPost as paymentWebhook } from './routes/webhooks/payment.js';
 import { onRequestGet as localizeGet } from './routes/localize.js';
+import { onRequestGet as appSettingsGet } from './routes/app-settings.js';
+import { onRequestGet as adminSettingsGet, onRequestPatch as adminSettingsPatch } from './routes/admin/settings.js';
 
 const methodNotAllowed = () => new Response(JSON.stringify({ok:false,error:'method_not_allowed'}), {
   status: 405,
@@ -54,6 +56,12 @@ async function dispatchApi(request, env, ctx) {
   if (path === '/api/account/billing') return method === 'GET' ? accountBillingGet(context) : methodNotAllowed();
   if (path === '/api/webhooks/payment') return method === 'POST' ? paymentWebhook(context) : methodNotAllowed();
   if (path === '/api/localize') return method === 'GET' ? localizeGet(context) : methodNotAllowed();
+  if (path === '/api/app-settings') return method === 'GET' ? appSettingsGet(context) : methodNotAllowed();
+  if (path === '/api/admin/settings') {
+    if (method === 'GET') return adminSettingsGet(context);
+    if (method === 'PATCH') return adminSettingsPatch(context);
+    return methodNotAllowed();
+  }
   return notFound();
 }
 
@@ -62,7 +70,7 @@ export default {
     const url = new URL(request.url);
     try {
       if (url.pathname.startsWith('/api/')) {
-        if (!env.DB && url.pathname !== '/api/localize') {
+        if (!env.DB && !['/api/localize','/api/app-settings'].includes(url.pathname)) {
           return withSecurityHeaders(new Response(JSON.stringify({ok:false,error:'database_not_configured'}), {
             status: 503,
             headers: {'content-type':'application/json; charset=utf-8','cache-control':'no-store'}
