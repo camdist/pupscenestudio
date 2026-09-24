@@ -1,6 +1,7 @@
 (() => {
   const PLANS = {
-    '3-storyboards': {usd: 1, label: '3 Storyboard Generations', cadence: 'one-time'},
+    'free-daily': {usd: 0, label: 'Free — 1 Storyboard Daily', cadence: 'free'},
+    'five-monthly': {usd: 1, label: '5 Storyboard Generations', cadence: '/month'},
     'unlimited-monthly': {usd: 7.99, label: 'Unlimited Storyboard Generation', cadence: '/month'}
   };
   const COUNTRY_CURRENCY = {
@@ -62,11 +63,13 @@
     document.querySelectorAll('[data-plan-local]').forEach(el=>{
       const id=el.dataset.planLocal,p=PLANS[id]; if(!p)return;
       if(current.loading){el.textContent='Updating…';return;}
+      if(p.cadence==='free'){el.textContent='Free';return;}
       const converted=p.usd*current.rate;
       el.textContent=fmt(converted,current.currency)+(p.cadence==='/month'?'/month':'');
     });
     document.querySelectorAll('[data-plan-base]').forEach(el=>{
       const id=el.dataset.planBase,p=PLANS[id]; if(!p)return;
+      if(p.cadence==='free'){el.textContent='1 storyboard resets daily';return;}
       el.textContent=current.currency==='USD' ? 'Billing price' : `Base price: ${fmt(p.usd,'USD')}${p.cadence==='/month'?'/month':''}`;
     });
     document.querySelectorAll('[data-local-currency]').forEach(el=>el.textContent=current.currency);
