@@ -1,16 +1,16 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "pupscene-studio",
+  "name": "pupscenestudio",
   "main": "./src/index.js",
   "compatibility_date": "2026-09-24",
   "assets": {
     "directory": "./public",
-    "binding": "ASSETS",
+    "binding": "DB",
     "run_worker_first": ["/api/*"]
   },
   "vars": {
     "ADMIN_EMAIL": "campodigitalstudio@gmail.com",
-    "PUPSCENE_FROM_EMAIL": "PupScene Studio <login@pupscenestudio.site>"
+    "PUPSCENE_FROM_EMAIL": "PupScene Studio <campodigitalstudio@gmail.com>"
   }
 
   // After you create the D1 database, paste its database_id below and uncomment this block.
@@ -18,7 +18,7 @@
   //   {
   //     "binding": "DB",
   //     "database_name": "pupscene-db",
-  //     "database_id": "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+  //     "database_id": "9cfc1784-dd24-4f08-be9a-25fd8b319cc6"
   //   }
   // ]
 }
