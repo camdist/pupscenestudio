@@ -1,8 +1,8 @@
 {
-  "id": "/",
+  "id": "pupscene-studio",
   "name": "PupScene Studio",
   "short_name": "PupScene",
-  "description": "AI-video planning studio for provider-aware product ad storyboards and prompts.",
+  "description": "AI video ad planning studio with storyboards, continuity prompts, project library and secure purchase flow.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
