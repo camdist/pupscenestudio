@@ -1,1 +1,1 @@
-
+import {json,getSession,publicUser} from '../../_lib/auth.js';export async function onRequestGet(ctx){const s=await getSession(ctx);if(!s)return json({ok:false,error:'auth_required'},401);return json({ok:true,user:publicUser(s)})}
