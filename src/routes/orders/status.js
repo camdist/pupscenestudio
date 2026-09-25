@@ -1,1 +1,1 @@
-
+import {json,requireUser} from '../../lib/auth.js';export async function onRequestGet(ctx){const r=await requireUser(ctx);if(r.response)return r.response;const id=new URL(ctx.request.url).searchParams.get('order');if(!id)return json({ok:false,error:'order_required'},400);const o=await ctx.env.DB.prepare('SELECT id,plan,billing_type,provider,status,created_at,updated_at FROM orders WHERE id=? AND user_id=?').bind(id,r.session.user_id).first();if(!o)return json({ok:false,error:'order_not_found'},404);return json({ok:true,order:o})}
