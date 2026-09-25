@@ -1,1 +1,31 @@
-
+import {json,requireUser} from '../../lib/auth.js';
+import {PLAN_PRICES,PLAN_NAMES,createOrder,basicAuth} from '../../lib/payments.js';
+async function usdToPhp(){try{const r=await fetch('https://api.frankfurter.app/latest?from=USD&to=PHP');if(r.ok){const j=await r.json();const x=Number(j.rates?.PHP);if(x>0)return x}}catch(e){}return 58}
+async function paypalToken(env){const base=env.PAYPAL_ENV==='live'?'https://api-m.paypal.com':'https://api-m.sandbox.paypal.com';const r=await fetch(base+'/v1/oauth2/token',{method:'POST',headers:{authorization:basicAuth(env.PAYPAL_CLIENT_ID,env.PAYPAL_CLIENT_SECRET),'content-type':'application/x-www-form-urlencoded'},body:'grant_type=client_credentials'});if(!r.ok)throw new Error('paypal_auth_failed');const j=await r.json();return {token:j.access_token,base}}
+export async function onRequestPost(ctx){
+  const r=await requireUser(ctx);if(r.response)return r.response;let b={};try{b=await ctx.request.json()}catch(e){}
+  const plan=b.plan,billingType=b.billingType,provider=b.provider,name=String(b.name||'').trim();if(!PLAN_PRICES[plan]||!['one-time','subscription'].includes(billingType)||!['paymongo','card','paypal'].includes(provider))return json({ok:false,error:'invalid_checkout'},400);
+  if(provider==='card')return json({ok:false,error:'payment_option_temporarily_disabled'},503);
+  if((provider==='paymongo'||provider==='card')&&billingType==='subscription')return json({ok:false,error:'subscription_use_paypal'},400);
+  const origin=new URL(ctx.request.url).origin;
+  try{
+    if(provider==='paymongo'){
+      if(!ctx.env.PAYMONGO_SECRET_KEY)return json({ok:false,error:'paymongo_not_configured'},503);
+      const rate=await usdToPhp(),php=Math.max(1,Math.round(PLAN_PRICES[plan]*rate*100));const order=await createOrder(ctx,{user:r.session,plan,billingType,provider,name,currency:'PHP',amountMinor:php});
+      const methods=String(ctx.env.PAYMONGO_PAYMENT_METHODS||'gcash').split(',').map(x=>x.trim()).filter(Boolean);
+      const payload={data:{attributes:{billing:{name:name||r.session.email,email:r.session.email},cancel_url:`${origin}/checkout.html?cancelled=1&order=${order.id}`,description:`PupScene Studio — ${PLAN_NAMES[plan]} — 30 day access`,payment_method_types:methods,line_items:[{amount:php,quantity:1,name:PLAN_NAMES[plan],description:billingType==='one-time'?'30-day access':'Monthly access',currency:'PHP'}],merchant:'PupScene Studio',reference_number:order.id,send_email_receipt:true,show_description:true,show_line_items:true,success_url:`${origin}/thank-you.html?order=${order.id}`}}};
+      const pm=await fetch('https://api.paymongo.com/v1/checkout_sessions',{method:'POST',headers:{authorization:basicAuth(ctx.env.PAYMONGO_SECRET_KEY),'content-type':'application/json','accept':'application/json'},body:JSON.stringify(payload)});const pj=await pm.json().catch(()=>({}));if(!pm.ok){await ctx.env.DB.prepare("UPDATE orders SET status='failed',updated_at=? WHERE id=?").bind(Date.now(),order.id).run();return json({ok:false,error:'paymongo_checkout_failed',detail:pj.errors?.[0]?.detail||null},502)}
+      const checkoutId=pj.data?.id||null,url=pj.data?.attributes?.checkout_url||pj.data?.attributes?.checkout_url_link||null;await ctx.env.DB.prepare('UPDATE orders SET provider_checkout_id=?,status=?,updated_at=? WHERE id=?').bind(checkoutId,'pending',Date.now(),order.id).run();if(!url)return json({ok:false,error:'paymongo_missing_checkout_url'},502);return json({ok:true,orderId:order.id,redirectUrl:url});
+    }
+    if(provider==='paypal'){
+      if(!ctx.env.PAYPAL_CLIENT_ID||!ctx.env.PAYPAL_CLIENT_SECRET)return json({ok:false,error:'paypal_not_configured'},503);const order=await createOrder(ctx,{user:r.session,plan,billingType,provider,name,currency:'USD',amountMinor:Math.round(PLAN_PRICES[plan]*100)});const pp=await paypalToken(ctx.env);
+      if(billingType==='subscription'){
+        const planId=plan==='five-monthly'?ctx.env.PAYPAL_PLAN_FIVE:ctx.env.PAYPAL_PLAN_UNLIMITED;if(!planId)return json({ok:false,error:'paypal_subscription_plan_not_configured'},503);
+        const body={plan_id:planId,custom_id:order.id,subscriber:{email_address:r.session.email,name:{given_name:name||'PupScene',surname:'Buyer'}},application_context:{brand_name:'PupScene Studio',user_action:'SUBSCRIBE_NOW',return_url:`${origin}/thank-you.html?order=${order.id}`,cancel_url:`${origin}/checkout.html?cancelled=1&order=${order.id}`}};
+        const pr=await fetch(pp.base+'/v1/billing/subscriptions',{method:'POST',headers:{authorization:'Bearer '+pp.token,'content-type':'application/json','accept':'application/json','prefer':'return=representation'},body:JSON.stringify(body)});const pj=await pr.json().catch(()=>({}));if(!pr.ok)return json({ok:false,error:'paypal_subscription_failed'},502);const url=(pj.links||[]).find(x=>x.rel==='approve')?.href;await ctx.env.DB.prepare('UPDATE orders SET provider_checkout_id=?,subscription_id=?,status=?,updated_at=? WHERE id=?').bind(pj.id,pj.id,'pending',Date.now(),order.id).run();return json({ok:true,orderId:order.id,redirectUrl:url});
+      }
+      const body={intent:'CAPTURE',purchase_units:[{custom_id:order.id,description:`PupScene Studio — ${PLAN_NAMES[plan]}`,amount:{currency_code:'USD',value:PLAN_PRICES[plan].toFixed(2)}}],payment_source:{paypal:{experience_context:{brand_name:'PupScene Studio',user_action:'PAY_NOW',return_url:`${origin}/thank-you.html?order=${order.id}`,cancel_url:`${origin}/checkout.html?cancelled=1&order=${order.id}`}}}};
+      const pr=await fetch(pp.base+'/v2/checkout/orders',{method:'POST',headers:{authorization:'Bearer '+pp.token,'content-type':'application/json','accept':'application/json','prefer':'return=representation'},body:JSON.stringify(body)});const pj=await pr.json().catch(()=>({}));if(!pr.ok)return json({ok:false,error:'paypal_order_failed'},502);const url=(pj.links||[]).find(x=>x.rel==='payer-action'||x.rel==='approve')?.href;await ctx.env.DB.prepare('UPDATE orders SET provider_checkout_id=?,status=?,updated_at=? WHERE id=?').bind(pj.id,'pending',Date.now(),order.id).run();return json({ok:true,orderId:order.id,redirectUrl:url});
+    }
+  }catch(e){console.error(e);return json({ok:false,error:'checkout_server_error'},500)}
+}
