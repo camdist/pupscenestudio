@@ -10,14 +10,15 @@
   },
   "vars": {
     "ADMIN_EMAIL": "campodigitalstudio@gmail.com",
-    "TURNSTILE_SITE_KEY": "0x4AAAAAAFCwyg-pM7xW6uXQ",
-    "PUPSCENE_FROM_EMAIL": "PupScene Studio <campodigitalstudio@gmail.com>",
-    "PAYPAL_ENV": "sandbox",
+    "PAYMONGO_PAYMENT_METHODS": "gcash,paymaya",
     "PAYPAL_CLIENT_ID": "BAA4MQAgs8VAOHz2k_1gbsDItXweEyJ_QwxH_PKcckN3lXrYbx7AQoEqZBXGHiYFng-oqhzjDrAAyCsOxs",
-    "PAYPAL_WEBHOOK_ID": "6AS45543UA7946342",
+    "PAYPAL_ENV": "sandbox",
     "PAYPAL_PLAN_FIVE": "P-83D3293959555732LNK24J5I",
     "PAYPAL_PLAN_UNLIMITED": "P-6BH16602A8593152FNK24LYQ",
-    "PAYMONGO_PAYMENT_METHODS": "gcash,paymaya"
+    "PAYPAL_WEBHOOK_ID": "6AS45543UA7946342",
+    "PUPSCENE_FROM_EMAIL": "PupScene Studio <login@pupscenestudio.site>",
+    "RESEND_API_KEY": "login@pupscenestudio.site",
+    "TURNSTILE_SITE_KEY": "0x4AAAAAAFCwyg-pM7xW6uXQ"
   },
    "d1_databases": [
      {
