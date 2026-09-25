@@ -9,7 +9,7 @@
     "run_worker_first": ["/api/*"]
   },
   "vars": {
-    "ADMIN_EMAIL": "campodigitalstudio@gmail.com",
+    "ADMIN_EMAIL": "login@pupscenestudio.site",
     "PAYMONGO_PAYMENT_METHODS": "gcash,paymaya",
     "PAYPAL_CLIENT_ID": "BAA4MQAgs8VAOHz2k_1gbsDItXweEyJ_QwxH_PKcckN3lXrYbx7AQoEqZBXGHiYFng-oqhzjDrAAyCsOxs",
     "PAYPAL_ENV": "sandbox",
