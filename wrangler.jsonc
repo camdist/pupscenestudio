@@ -19,7 +19,6 @@
     "PAYPAL_PLAN_UNLIMITED": "P-6BH16602A8593152FNK24LYQ",
     "PAYMONGO_PAYMENT_METHODS": "gcash,paymaya"
   },
-   Add your D1 database_id and uncomment this block before deployment.
    "d1_databases": [
      {
        "binding": "DB",
