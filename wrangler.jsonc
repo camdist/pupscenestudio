@@ -9,7 +9,7 @@
     "run_worker_first": ["/api/*"]
   },
   "vars": {
-    "ADMIN_EMAIL": "login@pupscenestudio.site",
+    "ADMIN_EMAIL": "campodigitalstudio@gmail.com",
     "PAYMONGO_PAYMENT_METHODS": "gcash,paymaya",
     "PAYPAL_CLIENT_ID": "BAA4MQAgs8VAOHz2k_1gbsDItXweEyJ_QwxH_PKcckN3lXrYbx7AQoEqZBXGHiYFng-oqhzjDrAAyCsOxs",
     "PAYPAL_ENV": "sandbox",
@@ -17,7 +17,7 @@
     "PAYPAL_PLAN_UNLIMITED": "P-6BH16602A8593152FNK24LYQ",
     "PAYPAL_WEBHOOK_ID": "6AS45543UA7946342",
     "PUPSCENE_FROM_EMAIL": "PupScene Studio <login@pupscenestudio.site>",
-    "RESEND_API_KEY": "login@pupscenestudio.site",
+    "RESEND_API_KEY": "re_ars1EB2c_ACbYqLuhut3fTRVEoBb3wtrT",
     "TURNSTILE_SITE_KEY": "0x4AAAAAAFCwyg-pM7xW6uXQ"
   },
    "d1_databases": [
