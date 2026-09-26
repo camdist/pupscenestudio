@@ -3,6 +3,17 @@ export const ADMIN_EMAIL='campodigitalstudio@gmail.com';
 export const normEmail=v=>String(v||'').trim().toLowerCase();
 export const json=(data,status=200,headers={})=>new Response(JSON.stringify(data),{status,headers:{'content-type':'application/json; charset=utf-8','cache-control':'no-store',...headers}});
 export async function sha256(value){const b=new TextEncoder().encode(value);const h=await crypto.subtle.digest('SHA-256',b);return [...new Uint8Array(h)].map(x=>x.toString(16).padStart(2,'0')).join('')}
+
+export function bytesToHex(bytes){return [...bytes].map(x=>x.toString(16).padStart(2,'0')).join('')}
+export function hexToBytes(hex){const clean=String(hex||'');const out=new Uint8Array(Math.floor(clean.length/2));for(let i=0;i<out.length;i++)out[i]=parseInt(clean.slice(i*2,i*2+2),16);return out}
+export async function passwordHash(password,saltHex=null){
+  const salt=saltHex?hexToBytes(saltHex):crypto.getRandomValues(new Uint8Array(16));
+  const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(String(password)),{name:'PBKDF2'},false,['deriveBits']);
+  const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt,iterations:150000,hash:'SHA-256'},key,256);
+  return {hash:bytesToHex(new Uint8Array(bits)),salt:bytesToHex(salt)};
+}
+export async function verifyPassword(password,saltHex,expectedHash){const r=await passwordHash(password,saltHex);return r.hash===String(expectedHash||'')}
+
 export function randomToken(bytes=32){const a=new Uint8Array(bytes);crypto.getRandomValues(a);return [...a].map(x=>x.toString(16).padStart(2,'0')).join('')}
 export function cookieValue(req,name=COOKIE){const raw=req.headers.get('cookie')||'';for(const part of raw.split(';')){const [k,...v]=part.trim().split('=');if(k===name)return decodeURIComponent(v.join('='))}return null}
 export function sessionCookie(token,maxAge=2592000){return `${COOKIE}=${encodeURIComponent(token)}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${maxAge}`}
