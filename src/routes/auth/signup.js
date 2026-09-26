@@ -21,8 +21,14 @@ export async function onRequestPost(ctx){
     await ctx.env.DB.prepare('INSERT INTO users (id,email,name,role,status,created_at,last_login_at,password_hash,password_salt) VALUES (?,?,?,?,?,?,?,?,?)')
       .bind(id,email,name,'user','active',now,now,ph.hash,ph.salt).run();
     stage='entitlement_insert';
-    await ctx.env.DB.prepare('INSERT INTO entitlements (user_id,plan,status,credits_remaining,billing_type,updated_at) VALUES (?,?,?,?,?,?)')
-      .bind(id,'free-daily','active',0,'free',now).run();
+    try{
+      await ctx.env.DB.prepare('INSERT INTO entitlements (user_id,plan,status,credits_remaining,billing_type,updated_at) VALUES (?,?,?,?,?,?)')
+        .bind(id,'free-daily','active',0,'free',now).run();
+    }catch(entitlementError){
+      // Do not leave an orphan account if entitlement creation fails.
+      try{await ctx.env.DB.prepare('DELETE FROM users WHERE id=?').bind(id).run()}catch(_){}
+      throw entitlementError;
+    }
     stage='session_insert';
     const token=randomToken(),tokenHash=await sha256(token);
     await ctx.env.DB.prepare('INSERT INTO sessions (id,user_id,token_hash,created_at,expires_at,user_agent) VALUES (?,?,?,?,?,?)')
