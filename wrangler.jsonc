@@ -2,6 +2,7 @@
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "pupscenestudio",
   "main": "./src/index.js",
+  "keep_vars": true,
   "compatibility_date": "2026-09-26",
   "assets": {
     "directory": "./public",
@@ -20,7 +21,7 @@
     "PAYMONGO_PAYMENT_METHODS": "gcash,paymaya"
   },
   // Add your D1 database_id and uncomment this block before deployment.
-   "d1_databases": [
+  "d1_databases": [
      {
        "binding": "DB",
        "database_name": "pupscene-db",
