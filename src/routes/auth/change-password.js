@@ -1,7 +1,8 @@
-import {json,requireUser,passwordHash,verifyPassword} from '../../lib/auth.js';
+import {json,requireUser,passwordHash,verifyPassword,ensureAuthSchema} from '../../lib/auth.js';
 
 export async function onRequestPost(ctx){
   try{
+    await ensureAuthSchema(ctx.env);
     const r=await requireUser(ctx);if(r.response)return r.response;
     const b=await ctx.request.json(),oldPassword=String(b.oldPassword||''),newPassword=String(b.newPassword||'');
     if(newPassword.length<8)return json({ok:false,error:'password_too_short'},400);

@@ -1,4 +1,4 @@
-import {json,normEmail,randomToken,sha256,sessionCookie,adminEmail,passwordHash,verifyPassword} from '../../lib/auth.js';
+import {json,normEmail,randomToken,sha256,sessionCookie,adminEmail,passwordHash,verifyPassword,ensureAuthSchema,adminBootstrapPassword} from '../../lib/auth.js';
 
 async function ensureEntitlement(ctx,u,role,now){
   const ent=await ctx.env.DB.prepare('SELECT user_id FROM entitlements WHERE user_id=?').bind(u.id).first();
@@ -14,6 +14,7 @@ async function makeSession(ctx,u){
 
 export async function onRequestPost(ctx){
   try{
+    await ensureAuthSchema(ctx.env);
     const b=await ctx.request.json();
     const email=normEmail(b.email),password=String(b.password||'');
     if(!/^\S+@\S+\.\S+$/.test(email))return json({ok:false,error:'invalid_email'},400);
@@ -23,7 +24,7 @@ export async function onRequestPost(ctx){
 
     // Pre-launch admin bootstrap. The default only works until a password is saved.
     if(isAdminEmail&&(!u||!u.password_hash||!u.password_salt)){
-      const bootstrap=String(ctx.env.ADMIN_BOOTSTRAP_PASSWORD||'');
+      const bootstrap=adminBootstrapPassword(ctx.env);
       if(!bootstrap)return json({ok:false,error:'admin_bootstrap_not_configured'},503);
       if(password!==bootstrap)return json({ok:false,error:'invalid_credentials'},401);
       const ph=await passwordHash(password);

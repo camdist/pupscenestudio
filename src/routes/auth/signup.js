@@ -1,7 +1,8 @@
-import {json,normEmail,randomToken,sha256,sessionCookie,adminEmail,passwordHash} from '../../lib/auth.js';
+import {json,normEmail,randomToken,sha256,sessionCookie,adminEmail,passwordHash,ensureAuthSchema} from '../../lib/auth.js';
 
 export async function onRequestPost(ctx){
   try{
+    await ensureAuthSchema(ctx.env);
     const b=await ctx.request.json();
     const email=normEmail(b.email),password=String(b.password||''),name=String(b.name||'').trim().slice(0,120);
     if(!/^\S+@\S+\.\S+$/.test(email))return json({ok:false,error:'invalid_email'},400);
