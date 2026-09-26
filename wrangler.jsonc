@@ -9,6 +9,7 @@
     "binding": "ASSETS",
     "run_worker_first": ["/api/*", "/", "/index.html"]
   },
+  "ai": { "binding": "AI" },
   "vars": {
     "ADMIN_EMAIL": "campodigitalstudio@gmail.com",
     "TURNSTILE_SITE_KEY": "0x4AAAAAAFCwyg-pM7xW6uXQ",
