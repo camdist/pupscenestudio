@@ -2,7 +2,7 @@
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "pupscene-studio",
   "main": "./src/index.js",
-  "compatibility_date": "2026-09-25",
+  "compatibility_date": "2026-09-26",
   "assets": {
     "directory": "./public",
     "binding": "ASSETS",
@@ -10,20 +10,21 @@
   },
   "vars": {
     "ADMIN_EMAIL": "campodigitalstudio@gmail.com",
-    "PAYMONGO_PAYMENT_METHODS": "gcash,paymaya",
-    "PAYPAL_CLIENT_ID": "BAA4MQAgs8VAOHz2k_1gbsDItXweEyJ_QwxH_PKcckN3lXrYbx7AQoEqZBXGHiYFng-oqhzjDrAAyCsOxs",
+    "TURNSTILE_SITE_KEY": "0x4AAAAAAFCwyg-pM7xW6uXQ",
+    "PUPSCENE_FROM_EMAIL": "PupScene Studio <login@pupscenestudio.site>",
     "PAYPAL_ENV": "sandbox",
+    "PAYPAL_CLIENT_ID": "BAA4MQAgs8VAOHz2k_1gbsDItXweEyJ_QwxH_PKcckN3lXrYbx7AQoEqZBXGHiYFng-oqhzjDrAAyCsOxs",
+    "PAYPAL_WEBHOOK_ID": "6AS45543UA7946342",
     "PAYPAL_PLAN_FIVE": "P-83D3293959555732LNK24J5I",
     "PAYPAL_PLAN_UNLIMITED": "P-6BH16602A8593152FNK24LYQ",
-    "PAYPAL_WEBHOOK_ID": "6AS45543UA7946342",
-    "PUPSCENE_FROM_EMAIL": "PupScene Studio <login@pupscenestudio.site>",
-    "TURNSTILE_SITE_KEY": "0x4AAAAAAFCwyg-pM7xW6uXQ"
+    "PAYMONGO_PAYMENT_METHODS": "gcash,paymaya"
   },
-   "d1_databases": [
-     {
-       "binding": "DB",
-       "database_name": "pupscene-db",
-       "database_id": "9cfc1784-dd24-4f08-be9a-25fd8b319cc6"
-     }
-   ]
+  // Add your D1 database_id and uncomment this block before deployment.
+  // "d1_databases": [
+  //   {
+  //     "binding": "DB",
+  //     "database_name": "pupscene-db",
+  //     "database_id": "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+  //   }
+  // ]
 }
