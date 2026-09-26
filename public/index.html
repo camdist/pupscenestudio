@@ -120,6 +120,49 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:30px}
     <div class="splash-hint">Starting studio in 5 seconds · tap the puppy</div>
   </div>
 </div>
+<script>
+/* PupScene v15.2 fail-safe intro controller. Keep this independent from Studio initialization. */
+(function(){
+  const splash=document.getElementById('splash');
+  const skip=document.getElementById('skipIntro');
+  const pup=document.getElementById('splashPup');
+  const INTRO_KEY='pupscene_intro_seen_v15_2';
+  let closed=false;
+  function closeIntro(){
+    if(closed)return; closed=true;
+    try{localStorage.setItem(INTRO_KEY,'1')}catch(_){}
+    document.body.classList.remove('intro-active');
+    if(!splash)return;
+    splash.classList.add('exit');
+    setTimeout(()=>{try{splash.remove()}catch(_){}},650);
+  }
+  window.pupCloseIntro=closeIntro;
+  if(skip){skip.addEventListener('click',closeIntro);skip.addEventListener('pointerup',closeIntro)}
+  function bark(){
+    try{
+      const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+      const ctx=window.__pupIntroAudio||(window.__pupIntroAudio=new AC());
+      const now=ctx.currentTime,master=ctx.createGain();
+      master.gain.setValueAtTime(.0001,now);master.gain.exponentialRampToValueAtTime(.18,now+.01);master.gain.exponentialRampToValueAtTime(.0001,now+.22);master.connect(ctx.destination);
+      const osc=ctx.createOscillator(),g=ctx.createGain();osc.type='sawtooth';osc.frequency.setValueAtTime(280,now);osc.frequency.exponentialRampToValueAtTime(165,now+.12);g.gain.setValueAtTime(.0001,now);g.gain.exponentialRampToValueAtTime(.3,now+.008);g.gain.exponentialRampToValueAtTime(.0001,now+.14);osc.connect(g);g.connect(master);osc.start(now);osc.stop(now+.15);
+    }catch(_){}
+  }
+  function boop(){
+    bark();
+    if(!pup)return;
+    pup.classList.remove('boop');void pup.offsetWidth;pup.classList.add('boop');
+  }
+  if(pup){
+    pup.setAttribute('role','button');pup.setAttribute('tabindex','0');pup.setAttribute('aria-label','PupScene puppy mascot. Activate to hear a bark.');
+    pup.addEventListener('click',boop);
+    pup.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();boop()}});
+  }
+  let seen=false;try{seen=localStorage.getItem(INTRO_KEY)==='1'}catch(_){}
+  setTimeout(closeIntro,seen?120:5000);
+  /* Hard fallback: never allow the splash to trap the user. */
+  setTimeout(closeIntro,8000);
+})();
+</script>
 
 <header>
   <div class="wrap nav">
@@ -331,16 +374,7 @@ $('reset').onclick=()=>clearCurrentProject(true);
 $('storyType').onchange=()=>{$('frameworkHint').textContent=storyHints[$('storyType').value];saveProject()};
 ['product','link','audience','benefit','story','details','masterPrompt','duration','format'].forEach(id=>$(id).addEventListener('input',saveProject));
 [['charRef','charName','charPreview'],['locRef','locName','locPreview'],['prodRef','prodName','prodPreview']].forEach(([input,name,preview])=>$(input).onchange=()=>{const f=$(input).files[0];$(name).textContent=f?.name||'No file selected';if(refPreviewUrls[input])URL.revokeObjectURL(refPreviewUrls[input]);if(f){refPreviewUrls[input]=URL.createObjectURL(f);$(preview).src=refPreviewUrls[input];$(preview).classList.add('show')}else{$(preview).src='';$(preview).classList.remove('show')}if(scenes.length)render();saveProject()});
-const splash=$('splash'),pup=$('splashPup');
-function closeSplash(){if(!splash||splash.classList.contains('exit'))return;localStorage.setItem(INTRO_KEY,'1');splash.classList.add('exit');document.body.classList.remove('intro-active');setTimeout(()=>splash.remove(),600)}
-$('skipIntro').addEventListener('click',closeSplash);
-if(localStorage.getItem(INTRO_KEY)==='1')setTimeout(closeSplash,150);else setTimeout(closeSplash,5000);
-pup.setAttribute('role','button');pup.setAttribute('tabindex','0');pup.setAttribute('aria-label','PupScene puppy mascot. Activate to hear a bark.');
-function boop(){bark();pup.classList.remove('boop');void pup.offsetWidth;pup.classList.add('boop')}
-pup.addEventListener('click',boop);pup.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();boop()}});
-splash.addEventListener('pointermove',e=>{if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;const r=splash.getBoundingClientRect(),x=(e.clientX-r.width/2)/r.width,y=(e.clientY-r.height/2)/r.height;pup.style.transform=`translate(${x*16}px,${y*10}px) rotate(${x*3}deg)`});
-splash.addEventListener('pointerleave',()=>{pup.style.transform=''})
-let audioCtx;function bark(){try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();const now=audioCtx.currentTime,master=audioCtx.createGain();master.gain.setValueAtTime(.0001,now);master.gain.exponentialRampToValueAtTime(.22,now+.01);master.gain.exponentialRampToValueAtTime(.0001,now+.24);master.connect(audioCtx.destination);[0,.11].forEach((delay,i)=>{const osc=audioCtx.createOscillator(),g=audioCtx.createGain();osc.type='sawtooth';osc.frequency.setValueAtTime(i?240:285,now+delay);osc.frequency.exponentialRampToValueAtTime(i?150:175,now+delay+.11);g.gain.setValueAtTime(.0001,now+delay);g.gain.exponentialRampToValueAtTime(i?.24:.34,now+delay+.008);g.gain.exponentialRampToValueAtTime(.0001,now+delay+.12);osc.connect(g);g.connect(master);osc.start(now+delay);osc.stop(now+delay+.13)})}catch(e){}}
+// Intro is controlled by the fail-safe controller near the top of the page.
 const heroPup=$('heroPup'),hero=document.querySelector('.hero');let dx=0,dy=0,dragging=false,startX=0,startY=0,moved=false;
 function constrain(x,y){const hr=hero.getBoundingClientRect(),pr=heroPup.getBoundingClientRect();const baseLeft=pr.left-dx,baseTop=pr.top-dy;const minX=hr.left-baseLeft,maxX=hr.right-(baseLeft+pr.width),minY=hr.top-baseTop,maxY=hr.bottom-(baseTop+pr.height);return[Math.min(maxX,Math.max(minX,x)),Math.min(maxY,Math.max(minY,y))]}
 function applyPup(){heroPup.style.transform=`translate(${dx}px,${dy}px)`}
@@ -361,7 +395,7 @@ function openModal(id){const m=$(id);if(!m)return;m.classList.add('show');docume
 function closeModal(id){const m=$(id);if(!m)return;m.classList.remove('show');if(!document.querySelector('.modal-backdrop.show'))document.body.style.overflow=''}
 $('feedbackOpen').onclick=()=>openModal('feedbackModal');$('footerFeedbackOpen').onclick=()=>openModal('feedbackModal');$('privacyOpen').onclick=()=>openModal('privacyModal');$('termsOpen').onclick=()=>openModal('termsModal');
 document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>closeModal(b.dataset.close));document.querySelectorAll('.modal-backdrop').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)closeModal(m.id)}));document.addEventListener('keydown',e=>{if(e.key==='Escape'){const m=document.querySelector('.modal-backdrop.show');if(m)closeModal(m.id)}});
-function feedbackText(){const type=$('feedbackType').value,msg=$('feedbackMessage').value.trim(),email=$('feedbackEmail').value.trim();return `PupScene Studio Feedback\n\nType: ${type}\nContact email: ${email||'Not provided'}\nApp version: v14.4\nPage: ${location.href}\nBrowser: ${navigator.userAgent}\n\nFeedback:\n${msg||'(No message entered)'}`}
+function feedbackText(){const type=$('feedbackType').value,msg=$('feedbackMessage').value.trim(),email=$('feedbackEmail').value.trim();return `PupScene Studio Feedback\n\nType: ${type}\nContact email: ${email||'Not provided'}\nApp version: v15.2\nPage: ${location.href}\nBrowser: ${navigator.userAgent}\n\nFeedback:\n${msg||'(No message entered)'}`}
 $('copyFeedback').onclick=async()=>{await cp(feedbackText());showStatus('Feedback copied. Thank you.')};
 $('sendFeedbackEmail').onclick=()=>{if(!$('feedbackMessage').value.trim()){alert('Please add your feedback message first.');$('feedbackMessage').focus();return}const subject=encodeURIComponent('PupScene Studio Feedback — '+$('feedbackType').value),body=encodeURIComponent(feedbackText());location.href=`mailto:support@pupscenestudio.site?subject=${subject}&body=${body}`};
 let deferredInstallPrompt=null;const installBtn=$('installBtn'),installHelp=$('installHelp');const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);const isStandalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
