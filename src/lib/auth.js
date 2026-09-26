@@ -19,6 +19,45 @@ export function cookieValue(req,name=COOKIE){const raw=req.headers.get('cookie')
 export function sessionCookie(token,maxAge=2592000){return `${COOKIE}=${encodeURIComponent(token)}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${maxAge}`}
 export function clearSessionCookie(){return `${COOKIE}=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`}
 export function adminEmail(env){return normEmail(env.ADMIN_EMAIL||ADMIN_EMAIL)}
+export function adminBootstrapPassword(env){
+  return String(
+    env.ADMIN_BOOTSTRAP_PASSWORD ||
+    env.BOOTSTRAP_ADMIN_PASSWORD ||
+    env.BOOSTRAP_ADMIN_PASSWORD ||
+    ''
+  );
+}
+
+async function tableColumns(db,table){
+  const r=await db.prepare(`PRAGMA table_info(${table})`).all();
+  return new Set((r.results||[]).map(x=>String(x.name||'')));
+}
+export async function ensureAuthSchema(env){
+  if(!env?.DB)throw new Error('DB binding missing');
+  // Create core auth tables only when absent. Existing tables are preserved.
+  await env.DB.prepare(`CREATE TABLE IF NOT EXISTS users (
+    id TEXT PRIMARY KEY,email TEXT NOT NULL UNIQUE,name TEXT,password_hash TEXT,password_salt TEXT,
+    role TEXT NOT NULL DEFAULT 'user',status TEXT NOT NULL DEFAULT 'active',created_at INTEGER NOT NULL,last_login_at INTEGER
+  )`).run();
+  await env.DB.prepare(`CREATE TABLE IF NOT EXISTS sessions (
+    id TEXT PRIMARY KEY,user_id TEXT NOT NULL,token_hash TEXT NOT NULL UNIQUE,created_at INTEGER NOT NULL,expires_at INTEGER NOT NULL,user_agent TEXT,
+    FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+  )`).run();
+  await env.DB.prepare(`CREATE TABLE IF NOT EXISTS entitlements (
+    user_id TEXT PRIMARY KEY,plan TEXT NOT NULL DEFAULT 'free-daily',status TEXT NOT NULL DEFAULT 'active',credits_remaining INTEGER NOT NULL DEFAULT 0,
+    billing_type TEXT NOT NULL DEFAULT 'free',subscription_id TEXT,renewal_at INTEGER,valid_until INTEGER,updated_at INTEGER NOT NULL,
+    FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+  )`).run();
+  const uc=await tableColumns(env.DB,'users');
+  if(!uc.has('password_hash'))await env.DB.prepare('ALTER TABLE users ADD COLUMN password_hash TEXT').run();
+  if(!uc.has('password_salt'))await env.DB.prepare('ALTER TABLE users ADD COLUMN password_salt TEXT').run();
+  if(!uc.has('name'))await env.DB.prepare('ALTER TABLE users ADD COLUMN name TEXT').run();
+  if(!uc.has('last_login_at'))await env.DB.prepare('ALTER TABLE users ADD COLUMN last_login_at INTEGER').run();
+  const sc=await tableColumns(env.DB,'sessions');
+  if(!sc.has('user_agent'))await env.DB.prepare('ALTER TABLE sessions ADD COLUMN user_agent TEXT').run();
+  return true;
+}
+
 export function clientIp(req){return String(req.headers.get('cf-connecting-ip')||req.headers.get('x-forwarded-for')||'').split(',')[0].trim()}
 export async function getSession(ctx){
   const token=cookieValue(ctx.request); if(!token)return null; const hash=await sha256(token); const now=Date.now();
