@@ -1,6 +1,6 @@
 {
   "name": "pupscenestudio-cloudflare",
-  "version": "14.5.0",
+  "version": "14.6.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -9,7 +9,8 @@
     "cf-typegen": "wrangler types",
     "db:schema:local": "wrangler d1 execute pupscene-db --local --file=./cloudflare/schema-v14.sql",
     "db:schema:remote": "wrangler d1 execute pupscene-db --remote --file=./cloudflare/schema-v14.sql",
-    "db:migrate-v13-v14": "wrangler d1 execute pupscene-db --remote --file=./cloudflare/migrate-v13-to-v14.sql"
+    "db:migrate-v13-v14": "wrangler d1 execute pupscene-db --remote --file=./cloudflare/migrate-v13-to-v14.sql",
+    "db:migrate-v14-v14-6": "wrangler d1 execute pupscene-db --remote --file=./cloudflare/migrate-v14-to-v14-6.sql"
   },
   "devDependencies": {
     "wrangler": "^4.0.0"

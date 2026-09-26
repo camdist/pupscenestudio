@@ -6,7 +6,7 @@
   "assets": {
     "directory": "./public",
     "binding": "ASSETS",
-    "run_worker_first": ["/api/*"]
+    "run_worker_first": ["/api/*", "/", "/index.html"]
   },
   "vars": {
     "ADMIN_EMAIL": "campodigitalstudio@gmail.com",
@@ -20,7 +20,7 @@
     "PAYMONGO_PAYMENT_METHODS": "gcash,paymaya"
   },
   // Add your D1 database_id and uncomment this block before deployment.
-  "d1_databases": [
+   "d1_databases": [
      {
        "binding": "DB",
        "database_name": "pupscene-db",
