@@ -9,7 +9,7 @@ export function hexToBytes(hex){const clean=String(hex||'');const out=new Uint8A
 export async function passwordHash(password,saltHex=null){
   const salt=saltHex?hexToBytes(saltHex):crypto.getRandomValues(new Uint8Array(16));
   const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(String(password)),{name:'PBKDF2'},false,['deriveBits']);
-  const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt,iterations:150000,hash:'SHA-256'},key,256);
+  const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt,iterations:5000,hash:'SHA-256'},key,256);
   return {hash:bytesToHex(new Uint8Array(bits)),salt:bytesToHex(salt)};
 }
 export async function verifyPassword(password,saltHex,expectedHash){const r=await passwordHash(password,saltHex);return r.hash===String(expectedHash||'')}
