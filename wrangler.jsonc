@@ -20,11 +20,11 @@
     "PAYMONGO_PAYMENT_METHODS": "gcash,paymaya"
   },
   // Add your D1 database_id and uncomment this block before deployment.
-  "d1_databases": [
-     {
-       "binding": "DB",
-       "database_name": "pupscene-db",
-       "database_id": "9cfc1784-dd24-4f08-be9a-25fd8b319cc6"
-     }
-   ]
+  // "d1_databases": [
+  //   {
+  //     "binding": "DB",
+  //     "database_name": "pupscene-db",
+  //     "database_id": "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+  //   }
+  // ]
 }
