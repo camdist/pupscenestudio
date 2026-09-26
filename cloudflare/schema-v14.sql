@@ -1,6 +1,6 @@
 PRAGMA foreign_keys=ON;
 CREATE TABLE IF NOT EXISTS users (
-  id TEXT PRIMARY KEY,email TEXT NOT NULL UNIQUE,name TEXT,role TEXT NOT NULL DEFAULT 'user' CHECK(role IN ('user','admin')),status TEXT NOT NULL DEFAULT 'active' CHECK(status IN ('active','suspended','pending')),created_at INTEGER NOT NULL,last_login_at INTEGER
+  id TEXT PRIMARY KEY,email TEXT NOT NULL UNIQUE,name TEXT,password_hash TEXT,password_salt TEXT,role TEXT NOT NULL DEFAULT 'user' CHECK(role IN ('user','admin')),status TEXT NOT NULL DEFAULT 'active' CHECK(status IN ('active','suspended','pending')),created_at INTEGER NOT NULL,last_login_at INTEGER
 );
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE TABLE IF NOT EXISTS auth_codes (
